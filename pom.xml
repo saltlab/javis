@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.crawljax.plugins</groupId>
+	<artifactId>ProjectName</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>Javis</name>
+	<description>
+		Analyzes JavaScript hidden links.
+	</description>
+
+	<developers>
+		<developer>
+			<id>azarei</id>
+			<name>Alireza Zarei</name>
+			<email>alireza.aut@gmail.com</email>
+			<url></url>
+			<organization>UBC</organization>
+			<organizationUrl>ece.ubc.ca</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone></timezone>
+		</developer>
+		<developer>
+			<id>zahra</id>
+			<name>Zahra Behfarsahd</name>
+			<email></email>
+			<url></url>
+			<organization>UBC</organization>
+			<organizationUrl>ece.ubc.ca</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone></timezone>
+		</developer>
+	</developers>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.crawljax</groupId>
+			<artifactId>crawljax</artifactId>
+			<version>2.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>oro</groupId>
+			<artifactId>oro</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+            
+
+
+	</dependencies>
+
+
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>*.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<directory>target</directory>
+		<outputDirectory>target/classes</outputDirectory>
+		<finalName>${artifactId}-${version}</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+
+		<plugins>
+
+			<!-- Default JDK dependency -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+
+			<!-- Plugin used to create eclipse .project files -->
+			<!-- Invoke: mvn eclipse:eclipse -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<useProjectReferences>false</useProjectReferences>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,14 @@
+package ca.ubc.javis.unixdiff;
+
+import java.io.IOException;
+
+public class ExampleDiff {
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		String result =
+		        TargetedDiff.getTargetDiff("/Users/amesbah/workspace/DiffExpo/src/Diff/s1.html",
+		                "/Users/amesbah/workspace/DiffExpo/src/Diff/s2.html");
+		System.out.println("results: " + result);
+	}
+
+}
