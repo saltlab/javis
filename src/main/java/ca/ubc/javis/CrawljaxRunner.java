@@ -28,7 +28,7 @@ public class CrawljaxRunner  {
 	 * @param args
 	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 3;
+	private static final int MAX_STATES = 5;
 	private static Logger urlLogger = Logger.getLogger("URL-logfile");
 	private static Logger errorLogger = Logger.getLogger(CrawljaxRunner.class.getName());
 	public static int cons=0,counter=0;
@@ -181,7 +181,7 @@ public class CrawljaxRunner  {
 		urlArray=GetUrls.getArray();
 		for(int i=0;i<1;i++){
 			try {
-				
+				urlArray[i]="http://www.google.com";
 			/*	counter=i;
 				File file = new File("C:\\svn_repos\\saltlab\\trunk\\code\\javis\\"+i);
 				file.mkdir();
@@ -192,7 +192,7 @@ public class CrawljaxRunner  {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}*/				
-				System.setProperty("webdriver.firefox.bin" ,"C:\\Program Files (x86)\\Mozilla Firefox\\.firefox" );
+				System.setProperty("webdriver.firefox.bin" ,"//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox" );
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
 				
 				System.out.println("success 1");
