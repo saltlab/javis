@@ -8,7 +8,11 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -33,19 +37,19 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.Parser;
 
 public class EdgeDividerPostPlugin implements PostCrawlingPlugin {
 
-	private static int invisibleState;
-	private static int visibleState;
-	private static int invisibleEdge;
-	private static int visibleEdge;
-	private static int divCounter;
-	private static int spanCounter;
-	private static int inputCounter;
-	private static int buttonCounter;
-	private static int avisibleCounter;
-	private static int ainvisibleCounter;
-	private static int imgvisibleCounter;
-	private static int imginvisibleCounter;
-	private static Logger myLogger = Logger.getLogger(EdgeDividerPostPlugin.class.getName());
+	public static int invisibleState;
+	public static int visibleState;
+	public static int invisibleEdge;
+	public static int visibleEdge;
+	public static int divCounter;
+	public static int spanCounter;
+	public static int inputCounter;
+	public static int buttonCounter;
+	public static int avisibleCounter;
+	public static int ainvisibleCounter;
+	public static int imgvisibleCounter;
+	public static int imginvisibleCounter;
+	public static Logger myLogger = Logger.getLogger(EdgeDividerPostPlugin.class.getName());
 	public static String[] visiblearray= new String[500];
 	public static String[] invisiblearray=new String[500];
 	public static String[] stateCondition = new String[500];
@@ -62,7 +66,7 @@ public class EdgeDividerPostPlugin implements PostCrawlingPlugin {
 	
 		// configuring logger
 		myLogger.setLevel(Level.ALL);
-		
+		int totalDomDifferenceSize;
 		FileHandler myFileHandler = null;
 		FileHandler Xmlfh = null;
 		try {
@@ -111,21 +115,36 @@ public class EdgeDividerPostPlugin implements PostCrawlingPlugin {
 			}
 			previous = s;
 		}
-		System.out.println("Visibles: "+visibleState+" Invisibles: "+invisibleState+" Visible Edges: "+visibleEdge+" Invisible Edges: "+invisibleEdge);
+		myLogger.addHandler(myFileHandler);
+		myLogger.addHandler(Xmlfh);
+		myLogger.log(Level.ALL, "Visibles: "+visibleState+" Invisibles: "+invisibleState+" Visible Edges: "+visibleEdge+" Invisible Edges: "+invisibleEdge+"-------------Edges---------"+"\nVisible Edges are:\n");
 		int i;
-		for(i = 0; i<invisibleEdge;i++){
-			System.out.println(invisiblearray[i]);
-		}
 		for(i = 0; i<visibleEdge;i++){
-			System.out.println(visiblearray[i]);
+			myLogger.log(Level.ALL,visiblearray[i]);
 		}
-		for(i = 0; i<(visibleState+invisibleState);i++){
-			System.out.println(stateCondition[i]);
-			if(stateCondition[i].equals("invisible")){
-				
-			}
+		myLogger.log(Level.ALL, "---------------\n Invisible Edges are:");
+		for(i = 0; i<invisibleEdge;i++){
+			myLogger.log(Level.ALL, invisiblearray[i]);
 		}
-		
+		myFileHandler.flush();
+		Xmlfh.flush();
+		myFileHandler.close();
+		Xmlfh.close();
+		File domDifference = new File("/ubc/ece/home/am/grads/janab/Github/javis/TotalChangeResultLog.txt");
+		if(!domDifference.exists()){
+			FileWriter totalDomDifferences;
+			try {
+				totalDomDifferences = new FileWriter("TotalChangeResultLog.txt");
+				BufferedWriter out = new BufferedWriter(totalDomDifferences);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}			
+		totalDomDifferenceSize = getDomDifferenceByteSize("/ubc/ece/home/am/grads/janab/Github/javis/TotalChangeResultLog.txt");
+		printResults(totalDomDifferenceSize);
 	}
 	
 public void stateCategorization(Set <Eventable> event){
@@ -322,6 +341,65 @@ public Boolean imgChecker(Node node, Eventable edge){
 			imginvisibleCounter++;
 		}
 	return visible;
+}
+
+public int getDomDifferenceByteSize(String path){
+	
+	int size = 0;
+	StringBuffer buffer = new StringBuffer();
+	
+		  // Open the file that is the first 
+		  // command line parameter
+		 FileReader file;
+		try {
+			
+			file = new FileReader(path);
+			BufferedReader br = new BufferedReader(file);
+			  String strLine = "";
+			  //Read File Line By Line
+			  try {
+				while ( br.readLine() != null)   {
+					  buffer.append(br.readLine());
+				  }
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			  strLine = buffer.toString().trim();
+			  size = (strLine.getBytes().length);
+			  //Close the input stream
+			  try {
+				
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
+		return size;
+}
+
+public void printResults(int size){
+	
+	FileWriter finalResults;
+	BufferedWriter out;
+	try {
+		finalResults = new FileWriter("FinalResults.txt");
+		out = new BufferedWriter(finalResults);	
+		out.write("Visible States: "+visibleState+"\nInvisible States: "+invisibleState+"\nVisible Edges: "+visibleEdge+"\nInvisible Edges: "+invisibleEdge
+				+"\nTotalDomDifferenceSize (Bytes): "+size+"\nTotalDomDifferenceSize (KBytes): "+(size/1024)+"\n--------Clickables---------"+"\nA Visible: "+avisibleCounter+"\nA Invisible: "+ainvisibleCounter+
+				"\nDiv: "+divCounter+"\nSpan: "+spanCounter+"\nImg Visible: "+imgvisibleCounter+"\nImg Invisible: "+imginvisibleCounter+
+				"\nInput: "+inputCounter+"\nButton: "+buttonCounter);
+
+		out.close();	
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
 }
 
 }

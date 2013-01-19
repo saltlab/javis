@@ -1,0 +1,212 @@
+http://www.gongxuearts.com/
+- [main]Starting Crawljax...
+- [main]Used plugins:
+- [main]ca.ubc.javis.HiddenWebPluginTest
+- [main]ca.ubc.javis.PluginTestPostCrawling
+- [main]Embedded browser implementation: firefox
+- [main]Number of threads: 1
+- [main]Crawl depth: 3
+- [main]Crawljax initialized!
+success 1
+- [main]Start crawling with 2 crawl elements
+- [Thread 1 Crawler 1 (initial)]Starting new Crawler: Thread 1 Crawler 1 (initial)
+- [Thread-3]Running PreCrawlingPlugins...
+- [Thread-3]Running OnBrowserCreatedPlugins...
+- [Thread 1 Crawler 1 (initial)]Loading Page http://www.javascriptkit.com/script/cut18.shtml
+- [Thread 1 Crawler 1 (initial)]Running OnUrlLoadPlugins...
+- [Thread 1 Crawler 1 (initial)]Running OnNewStatePlugins...
+State no:0
+- [Thread 1 Crawler 1 (initial)]Looking in state: index for candidate elements with 
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: FORM: action=http://www.javascriptkit.com/cgi-bin/search/search.cgi class=zoom_searchform id=jksitesearch method=get xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: FORM: name=Calc xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: FORM: method=POST xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[2] 
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: class=zoom_searchbox id=zoom_query name=zoom_query size=20 type=text value=Search JavaScript Kit xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: class=zoom_button type=submit value=Submit xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=zoom_per_page name=zoom_per_page type=hidden value=10 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[3] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=zoom_and name=zoom_and type=hidden value=1 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[4] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_sort type=hidden value=0 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[5] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=searchall name=zoom_cat[] style=margin-left: 5px type=checkbox value=-1 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/DIV[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=javascriptssearch name=zoom_cat[] type=checkbox value=0 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/DIV[1]/INPUT[2] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=tutorialsearch name=zoom_cat[] type=checkbox value=1 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/DIV[1]/INPUT[3] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: id=referencesearch name=zoom_cat[] type=checkbox value=2 xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/DIV[1]/INPUT[4] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=Input size=16 type=text xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[1]/TD[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=one onclick=Calc.Input.value += '1' type=button value=  1 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=two onclick=Calc.Input.value += '2' type=button value=  2 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[2] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=three onclick=Calc.Input.value += '3' type=button value=  3 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[3] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=plus onclick=Calc.Input.value += ' + ' type=button value=  + xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[4] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=four onclick=Calc.Input.value += '4' type=button value=  4 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[5] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=five onclick=Calc.Input.value += '5' type=button value=  5 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[6] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=six onclick=Calc.Input.value += '6' type=button value=  6 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[7] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=minus onclick=Calc.Input.value += ' - ' type=button value=  - xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[8] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=seven onclick=Calc.Input.value += '7' type=button value=  7 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[9] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=eight onclick=Calc.Input.value += '8' type=button value=  8 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[10] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=nine onclick=Calc.Input.value += '9' type=button value=  9 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[11] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=times onclick=Calc.Input.value += ' * ' type=button value=  x xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[12] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=clear onclick=Calc.Input.value = '' type=button value=  c xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[13] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zero onclick=Calc.Input.value += '0' type=button value=  0 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[14] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=DoIt onclick=Calc.Input.value = eval(Calc.Input.value) type=button value=  = xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[15] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=div onclick=Calc.Input.value += ' / ' type=button value=  / xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/TABLE[1]/TBODY[1]/TR[2]/TD[1]/INPUT[16] 
+- [Thread 1 Crawler 1 (initial)]Found 29 new candidate elements to analyze!
+- [Thread 1 Crawler 1 (initial)]Starting preStateCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]Running PreStateCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]Executing click on element: "Categories: All Free JavaScripts/ Applets Tutorials References" FORM: action="http://www.javascriptkit.com/cgi-bin/search/search.cgi" class="zoom_searchform" id="jksitesearch" method="get" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]; State: index
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: FORM: name="Calc" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]; State: index
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: "<FORM NAME="Calc"><TABLE BORDER=4><TR><TD><INPUT TYPE="text"   NAME="Input" Size="16"><br></TD></TR><TR><TD><INPUT TYPE="button" NAME="one"   VALUE="  1  " OnClick="Calc.Input.value += '1'"><INPUT TYPE="button" NAME="two"   VALUE="  2  " OnCLick="Calc.Input.value += '2'"><INPUT TYPE="button" NAME="three" VALUE="  3  " OnClick="Calc.Input.value += '3'"><INPUT TYPE="button" NAME="plus"  VALUE="  +  " OnClick="Calc.Input.value += ' + '"><br><INPUT TYPE="button" NAME="four"  VALUE="  4  " OnClick="Calc.Input.value += '4'"><INPUT TYPE="button" NAME="five"  VALUE="  5  " OnCLick="Calc.Input.value += '5'"><INPUT TYPE="button" NAME="six"   VALUE="  6  " OnClick="Calc.Input.value += '6'"><INPUT TYPE="button" NAME="minus" VALUE="  -  " OnClick="Calc.Input.value += ' - '"><br><INPUT TYPE="button" NAME="seven" VALUE="  7  " OnClick="Calc.Input.value += '7'"><INPUT TYPE="button" NAME="eight" VALUE="  8  " OnCLick="Calc.Input.value += '8'"><INPUT TYPE="button" NAME="nine"  VALUE="  9  " OnClick="Calc.Input.value += '9'"><INPUT TYPE="button" NAME="times" VALUE="  x  " OnClick="Calc.Input.value += ' * '"><br><INPUT TYPE="button" NAME="clear" VALUE="  c  " OnClick="Calc.Input.value = ''"><INPUT TYPE="button" NAME="zero"  VALUE="  0  " OnClick="Calc.Input.value += '0'"><INPUT TYPE="button" NAME="DoIt"  VALUE="  =  " OnClick="Calc.Input.value = eval(Calc.Input.value)"><INPUT TYPE="button" NAME="div"   VALUE="  /  " OnClick="Calc.Input.value += ' / '"><br></TD></TR></TABLE></FORM><p align="center"><font face="arial" size="-2">This free script provided by</font><br><font face="arial, helvetica" size="-2"><a href="http://javascriptkit.com">JavaScriptKit</a></font></p>" FORM: method="POST" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[2]; State: index
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: class="zoom_searchbox" id="zoom_query" name="zoom_query" size="20" type="text" value="Search JavaScript Kit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[1]; State: index
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]; State: index
+- [Thread 1 Crawler 1 (initial)]Dom is Changed!
+- [Thread 1 Crawler 1 (initial)]Correcting state name from  state6 to state1
+- [Thread 1 Crawler 1 (initial)]State state1 added to the StateMachine.
+- [Thread 1 Crawler 1 (initial)]StateMachine's Pointer changed to: state1
+- [Thread 1 Crawler 1 (initial)]StateMachine's Pointer changed to: state1 FROM index
+- [Thread 1 Crawler 1 (initial)]Running OnNewStatePlugins...
+State no:1
+- [Thread 1 Crawler 1 (initial)]Running GuidedCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]RECURSIVE Call crawl; Current DEPTH= 1
+- [Thread 1 Crawler 1 (initial)]Looking in state: state1 for candidate elements with 
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: FORM: action=search.cgi class=zoom_searchform method=get xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1] 
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]TAG: FORM
+- [Thread 1 Crawler 1 (initial)]TAG: INPUT
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_sort type=hidden value=0 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_xml type=hidden value=0 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[2] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: class=zoom_searchbox id=zoom_searchbox name=zoom_query size=20 type=text value=LDqhIRiP xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[3] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: class=zoom_button type=submit value=Submit xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_and type=radio value=0 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[2]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: checked=checked name=zoom_and type=radio value=1 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[2]/INPUT[2] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: checked=checked name=zoom_cat[] type=checkbox value=-1 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[3]/UL[1]/LI[1]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_cat[] type=checkbox value=0 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[3]/UL[1]/LI[2]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_cat[] type=checkbox value=1 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[3]/UL[1]/LI[3]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found new candidate element: INPUT: name=zoom_cat[] type=checkbox value=2 xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/SPAN[3]/UL[1]/LI[4]/INPUT[1] 
+- [Thread 1 Crawler 1 (initial)]Found 11 new candidate elements to analyze!
+- [Thread 1 Crawler 1 (initial)]Starting preStateCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]Running PreStateCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]Executing click on element: "Search for: Results per page:102050100Match: any search wordsall search wordsCategory: AllFree JavaScripts/ AppletsTutorialsReferences" FORM: action="search.cgi" class="zoom_searchform" method="get" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]; State: state1
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: name="zoom_sort" type="hidden" value="0" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[1]; State: state1
+- [Thread 1 Crawler 1 (initial)]Element not visible, so cannot be clicked: INPUT 
+- [Thread 1 Crawler 1 (initial)]Running OnFireEventFailedPlugins...
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: name="zoom_xml" type="hidden" value="0" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]; State: state1
+- [Thread 1 Crawler 1 (initial)]Element not visible, so cannot be clicked: INPUT 
+- [Thread 1 Crawler 1 (initial)]Running OnFireEventFailedPlugins...
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: class="zoom_searchbox" id="zoom_searchbox" name="zoom_query" size="20" type="text" value="LDqhIRiP" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[3]; State: state1
+- [Thread 1 Crawler 1 (initial)]Dom Not Changed!
+- [Thread 1 Crawler 1 (initial)]Executing click on element: INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4]; State: state1
+- [Thread 1 Crawler 1 (initial)]Dom is Changed!
+- [Thread 1 Crawler 1 (initial)]Correcting state name from  state4 to state2
+- [Thread 1 Crawler 1 (initial)]State state2 added to the StateMachine.
+- [Thread 1 Crawler 1 (initial)]StateMachine's Pointer changed to: state2
+- [Thread 1 Crawler 1 (initial)]StateMachine's Pointer changed to: state2 FROM state1
+- [Thread 1 Crawler 1 (initial)]Running OnNewStatePlugins...
+State no:2
+- [Thread 1 Crawler 1 (initial)]Running GuidedCrawlingPlugins...
+- [Thread 1 Crawler 1 (initial)]RECURSIVE Call crawl; Current DEPTH= 2
+- [Thread 1 Crawler 1 (initial)]Max number of states 3 reached!
+- [Thread 1 Crawler 1 (initial)]After 0 min, 16 sec the crawling process was requested to terminate @ Thread[Thread 1 Crawler 1 (initial),5,main]
+- [Browser closing Thread]Closing the browser...
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4]
+- [Thread 1 Crawler 1 (initial)]Total Crawling time(16741ms) ~= 0 min, 16 sec
+- [Thread 1 Crawler 1 (initial)]EXAMINED ELEMENTS: 40
+- [Thread 1 Crawler 1 (initial)]CLICKABLES: 2
+- [Thread 1 Crawler 1 (initial)]STATES: 3
+- [Thread 1 Crawler 1 (initial)]Dom average size (byte): 51863
+- [Thread 1 Crawler 1 (initial)]DONE!!!
+- [Thread 1 Crawler 1 (initial)]After 0 min, 16 sec the crawling process was requested to terminate @ Thread[Thread 1 Crawler 1 (initial),5,main]
+- [Thread 1 Crawler 1 (initial)]The shutdown thread of the BrowserPool was Interrupted
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4]
+- [Thread 1 Crawler 1 (initial)]Total Crawling time(16748ms) ~= 0 min, 16 sec
+- [Thread 1 Crawler 1 (initial)]EXAMINED ELEMENTS: 40
+- [Thread 1 Crawler 1 (initial)]CLICKABLES: 2
+- [Thread 1 Crawler 1 (initial)]STATES: 3
+- [Thread 1 Crawler 1 (initial)]Dom average size (byte): 51863
+- [Thread 1 Crawler 1 (initial)]DONE!!!
+- [Thread 1 Crawler 1 (initial)]After 0 min, 16 sec the crawling process was requested to terminate @ Thread[Thread 1 Crawler 1 (initial),5,main]
+- [Thread 1 Crawler 1 (initial)]The shutdown thread of the BrowserPool was Interrupted
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]
+- [Thread 1 Crawler 1 (initial)]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4]
+- [Thread 1 Crawler 1 (initial)]Total Crawling time(16751ms) ~= 0 min, 16 sec
+- [Thread 1 Crawler 1 (initial)]EXAMINED ELEMENTS: 40
+- [Thread 1 Crawler 1 (initial)]CLICKABLES: 2
+- [Thread 1 Crawler 1 (initial)]STATES: 3
+- [Thread 1 Crawler 1 (initial)]Dom average size (byte): 51863
+- [Thread 1 Crawler 1 (initial)]DONE!!!
+- [Thread 1 Crawler 1 (initial)]Finished executing
+- [Thread 1 Crawler 1 (initial)]All Crawlers finished executing, now shutting down
+- [main]CrawlerExecutor terminated
+- [main]Running PostCrawlingPlugins...
+- [Browser closing Thread]Closing the browser...
+***************************
+2
+INPUT
+attribute: 		class		 value:		zoom_button
+attribute: 		type		 value:		submit
+attribute: 		value		 value:		Submit
+Form input type:		text
+input values:		LDqhIRiP
+Form input type:		checkbox
+input values:		1
+Form input type:		checkbox
+input values:		1
+Form input type:		checkbox
+input values:		1
+Form input type:		checkbox
+input values:		0
+Form input type:		text
+input values:		VxbxTQZE
+Form input type:		textarea
+input values:		KfOahpeY
+INPUT
+attribute: 		class		 value:		zoom_button
+attribute: 		type		 value:		submit
+attribute: 		value		 value:		Submit
+Form input type:		text
+input values:		EwPVEVKV
+Form input type:		checkbox
+input values:		0
+Form input type:		select
+input values:		20
+
+The crawled website was:
+http://www.javascriptkit.com/script/cut18.shtml
+success in post crawl plugin
+- [main]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/FORM[1]/INPUT[2]
+- [main]Interaction Element= INPUT: class="zoom_button" type="submit" value="Submit" click xpath /HTML[1]/BODY[1]/DIV[2]/DIV[1]/DIV[1]/FORM[1]/INPUT[4]
+- [main]Total Crawling time(16754ms) ~= 0 min, 16 sec
+- [main]EXAMINED ELEMENTS: 40
+- [main]CLICKABLES: 2
+- [main]STATES: 3
+- [main]Dom average size (byte): 51863
+- [main]DONE!!!
+success 2
+success 3

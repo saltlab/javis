@@ -1,6 +1,9 @@
 package ca.ubc.javis;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -24,18 +27,18 @@ public class getDomDifferences{
 			out2.write(next);
 			out2.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-	String result = TargetedDiff.getTargetDiff("/ubc/ece/home/am/grads/janab/janab/saltlab/trunk/code/code/javis/firstDom.txt",
-                "/ubc/ece/home/am/grads/janab/janab/saltlab/trunk/code/code/javis/secondDom.txt");
+	String result = TargetedDiff.getTargetDiff("/ubc/ece/home/am/grads/janab/Github/javis/firstDom.txt",
+                "/ubc/ece/home/am/grads/janab/Github/javis/secondDom.txt");
 	buffer.append(result);
-	printResult(result,buffer.toString().trim(),id);
+	savingDomDifferences(result,buffer.toString().trim(),id);
+	
 		
 	}
 	
-	public static void printResult(String str1, String str2,String id) throws SecurityException, IOException{
+	public static void savingDomDifferences(String str1, String str2,String id) throws SecurityException, IOException{
 		FileWriter fstream1,fstream2;
 		try {
 			fstream1 = new FileWriter("TotalChangeResultLog.txt");
@@ -52,5 +55,7 @@ public class getDomDifferences{
 		}
 		
 	}
+	
+	
 	
 }

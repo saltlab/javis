@@ -8,7 +8,7 @@ public class GetUrls {
 	public static String[] getArray(){
 		Scanner x = null;
 		try {
-			x = new Scanner(new File("C:\\Users\\Jana\\Desktop\\AlexaURLs1.txt"));
+			x = new Scanner(new File("/ubc/ece/home/am/grads/janab/Desktop/AlexaURLs1.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
