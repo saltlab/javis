@@ -28,7 +28,7 @@ public class CrawljaxRunner  {
 	 * @param args
 	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 5;
+	private static final int MAX_STATES = 3;
 	private static Logger urlLogger = Logger.getLogger("URL-logfile");
 	private static Logger errorLogger = Logger.getLogger(CrawljaxRunner.class.getName());
 	public static int cons=0,counter=0;
@@ -122,8 +122,8 @@ public class CrawljaxRunner  {
 			second = initialization.indexOf("org");
 		else
 			second = URLstring.indexOf("com");
-		resticting = initialization.substring(first+1,second-1);
-		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
+	//	resticting = initialization.substring(first+1,second-1);
+	//	crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
 		
@@ -145,8 +145,8 @@ public class CrawljaxRunner  {
 		GetCandidateElements getCandidateElements = new GetCandidateElements();
 		crawljaxConfiguration.addPlugin(getCandidateElements);
 		
-		EdgeDividerPostPlugin edpp = new EdgeDividerPostPlugin();
-		crawljaxConfiguration.addPlugin(edpp);
+		Javis javis = new Javis();
+		crawljaxConfiguration.addPlugin(javis);
 		
 		return crawljaxConfiguration;
 	}
@@ -181,7 +181,7 @@ public class CrawljaxRunner  {
 		urlArray=GetUrls.getArray();
 		for(int i=0;i<1;i++){
 			try {
-				urlArray[i]="http://www.google.com";
+				
 			/*	counter=i;
 				File file = new File("C:\\svn_repos\\saltlab\\trunk\\code\\javis\\"+i);
 				file.mkdir();
@@ -192,7 +192,8 @@ public class CrawljaxRunner  {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}*/				
-				System.setProperty("webdriver.firefox.bin" ,"//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox" );
+				urlArray[i]="http://www.ece.ubc.ca/~janab";
+				System.setProperty("webdriver.firefox.bin" ,"C:\\Program Files (x86)\\Mozilla Firefox\\firefox" );
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
 				
 				System.out.println("success 1");

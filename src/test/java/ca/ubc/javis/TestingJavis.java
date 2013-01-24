@@ -1,0 +1,255 @@
+package ca.ubc.javis;
+
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.util.Set;
+
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+import com.crawljax.core.state.Eventable;
+import com.crawljax.core.state.Identification;
+import com.crawljax.core.state.StateFlowGraph;
+import com.crawljax.core.state.StateVertix;
+import com.crawljax.core.state.Eventable.EventType;
+import com.crawljax.core.state.Identification.How;
+import com.crawljax.util.Helper;
+
+public class TestingJavis {
+
+	@Test
+	public void testHrefInvisible(){
+		Boolean result = true;
+		String href = "#";
+		assertEquals(result,Javis.hrefInvisible(href));
+		href = "javascript.window";
+		assertTrue(Javis.hrefInvisible(href));
+		href = "http://www.google.ca";
+		assertFalse(Javis.hrefInvisible(href));
+	}
+	
+	@Test
+	public void testAnchorVisibilityChecking() throws SAXException, IOException{
+		Javis edp = new Javis();
+		String html =
+	        "<body><a id='achr' href='http://www.google.ca'>Google</a><div><span id='spn'>"
+	                + "</span></div></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element = dom.getElementById("achr");
+
+		Eventable clickable = new Eventable(element, EventType.click);
+		assertTrue(edp.anchorVisibilityChecking(clickable));
+	}
+	
+	@Test
+	public void testGetElementAttributes() throws SAXException, IOException{
+		String html =
+	        "<body><a id='achr' href='http://www.google.ca'>Google</a></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element = dom.getElementById("achr");
+		Eventable clickable = new Eventable(element, EventType.click);
+		assertEquals("http://www.google.ca",Javis.getElementAttributes(clickable.getElement()));
+	}
+	
+	@Test
+	public void testImgChecker() throws SAXException, IOException{
+		Javis edp = new Javis();
+		String html1 =
+	        "<body><a id='achr' href=\"http://www.google.ca\">Google<img id='img' width='25' /></a></body>";
+		String html2 =
+	        "<body><div id='div'>Click here<img id='img' width='25' /></div></body>";
+		Document dom1 = Helper.getDocument(html1);
+		Document dom2 = Helper.getDocument(html2);
+		assertNotNull(dom1);
+		assertNotNull(dom2);
+		Element element1 = dom1.getElementById("img");
+		Element element2 = dom2.getElementById("img");
+		Eventable clickable1 = new Eventable(element1, EventType.click);
+		Eventable clickable2 = new Eventable(element2, EventType.click);
+		Node node1 = clickable1.getElement().getNode().getParentNode();
+		Node node2 = clickable2.getElement().getNode().getParentNode();
+		assertNotNull(node1);
+		assertNotNull(node2);
+		assertTrue(edp.imgChecker(node1, clickable1));
+		assertFalse(edp.imgChecker(node2, clickable2));
+	}
+	
+	@Test
+	public void testStateCategorization_OneClickable_Visbile() throws SAXException, IOException{
+		Javis.setVisibleState(0);
+		Javis.setVisibleEdge(0);
+		StateVertix index = new StateVertix("index", "<table><div>index</div></table>");
+		StateVertix state2 = new StateVertix("STATE_TWO", "<table><a id='achr'>state2</a></table>");
+		StateVertix state3 = new StateVertix("STATE_THREE", "<table><div>state3</div></table>");
+		
+		StateFlowGraph graph = new StateFlowGraph(index);
+		assertTrue(graph.addState(state2)== null);
+		assertTrue(graph.addState(state3)== null);
+		assertNotNull(graph);
+		String html =
+	        "<body><a id='achr' href='http://www.google.ca'>Google</a><div id='div'>Click Here!</div></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element = dom.getElementById("achr");
+		Eventable clickable = new Eventable(element, EventType.click);
+		
+		
+		assertTrue(graph.addEdge(index, state2, clickable));
+		
+		Set<Eventable> clickables = graph.getOutgoingClickables(index);
+		
+		Javis javis = new Javis();
+		javis.stateCategorization(clickables);
+		assertEquals(1,Javis.getVisibleState());
+	}
+	
+	@Test
+	public void testStateCategorization_OneClickable_Invisbile() throws SAXException, IOException{
+		StateVertix index = new StateVertix("index", "<table><div>index</div></table>");
+		StateVertix state2 = new StateVertix("STATE_TWO", "<table><a id='achr'>state2</a></table>");
+		StateVertix state3 = new StateVertix("STATE_THREE", "<table><div>state3</div></table>");
+		
+		StateFlowGraph graph = new StateFlowGraph(index);
+		
+		assertNotNull(graph);
+		String html =
+	        "<body><a id='achr' href='http://www.google.ca'>Google</a><div id='div'>Click Here!</div></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element = dom.getElementById("div");
+		Eventable clickable = new Eventable(element, EventType.click);
+		
+		assertTrue(graph.addState(state2)== null);
+		assertTrue(graph.addState(state3)== null);
+		assertTrue(graph.addEdge(state2, state3, clickable));
+		
+		Set<Eventable> clickables = graph.getOutgoingClickables(state2);
+		
+		Javis javis = new Javis();
+		javis.stateCategorization(clickables);
+		assertEquals(1,Javis.getInvisibleState());
+	}
+	
+	
+	@Test
+	public void testStateCategorization_TwoClickables_Visible() throws SAXException, IOException{
+		Javis.setVisibleState(0);
+		Javis.setVisibleEdge(0);
+		StateVertix index = new StateVertix("index", "<table><div>index</div></table>");
+		StateVertix state2 = new StateVertix("STATE_TWO", "<table><a>state2</a></table>");
+		StateVertix state3 = new StateVertix("STATE_THREE", "<table><div>state3</div></table>");
+		StateVertix state4 = new StateVertix("STATE_FOUR", "<table><div>state4</div></table>");
+		
+		StateFlowGraph graph = new StateFlowGraph(index);
+		assertTrue(graph.addState(state2)== null);
+		assertTrue(graph.addState(state3)== null);
+		assertTrue(graph.addState(state4)== null);
+		assertNotNull(graph);
+		String html =
+	        "<body><a id='achr7' href='http://www.google.ca'>Google</a><a href='http://www.yahoo.ca'>Yahoo<img id='img1'></a><div id='div'>Click Here!</div></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element1 = dom.getElementById("achr7");
+		Eventable clickable1 = new Eventable(element1, EventType.click);
+		assertTrue(graph.addEdge(state3, state4, clickable1));
+		
+		Element element2 = dom.getElementById("img1");
+		Eventable clickable2 = new Eventable(element2, EventType.click);
+		
+		assertTrue(graph.addEdge(state3, state4, clickable2));
+		
+		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
+		System.out.println(clickables);
+		Javis javis = new Javis();
+		javis.stateCategorization(clickables);
+		assertEquals(1,Javis.getVisibleState());
+		assertEquals(2, Javis.getVisibleEdge());
+	}
+	
+	
+	@Test
+	public void testStateCategorization_TwoClickables_Invisible() throws SAXException, IOException{
+		Javis.setInvisibleState(0);
+		Javis.setInvisibleEdge(0);
+		StateVertix index = new StateVertix("index", "<table><div>index</div></table>");
+		StateVertix state2 = new StateVertix("STATE_TWO", "<table><a id='achr'>state2</a></table>");
+		StateVertix state3 = new StateVertix("STATE_THREE", "<table><div>state3</div></table>");
+		StateVertix state4 = new StateVertix("STATE_FOUR", "<table><div>state4</div></table>");
+		
+		StateFlowGraph graph = new StateFlowGraph(index);
+		assertTrue(graph.addState(state2)== null);
+		assertTrue(graph.addState(state3)== null);
+		assertTrue(graph.addState(state4)== null);
+		assertNotNull(graph);
+		String html =
+	        "<body><span id='spn1'>Google</span><div id='div1'><img id='img1'/>Click Here!</div></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element1 = dom.getElementById("spn1");
+		Eventable clickable1 = new Eventable(element1, EventType.click);
+		assertTrue(graph.addEdge(state3, state4, clickable1));
+		
+		Element element2 = dom.getElementById("img1");
+		Eventable clickable2 = new Eventable(element2, EventType.click);
+		
+		assertTrue(graph.addEdge(state3, state4, clickable2));
+		
+		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
+		Javis javis = new Javis();
+		javis.stateCategorization(clickables);
+		assertEquals(1,Javis.getInvisibleState());
+		assertEquals(2, Javis.getInvisibleEdge());
+	}
+	
+	@Test
+	public void testStateCategorization_TwoClickables_Invisible_VS_Visible() throws SAXException, IOException{
+		Javis.setInvisibleEdge(0);
+		Javis.setVisibleEdge(0);
+		Javis.setInvisibleState(0);
+		Javis.setVisibleState(0);
+		StateVertix index = new StateVertix("index", "<table><div>index</div></table>");
+		StateVertix state2 = new StateVertix("STATE_TWO", "<table><a id='achr'>state2</a></table>");
+		StateVertix state3 = new StateVertix("STATE_THREE", "<table><div>state3</div></table>");
+		StateVertix state4 = new StateVertix("STATE_FOUR", "<table><div>state4</div></table>");
+		
+		StateFlowGraph graph = new StateFlowGraph(index);
+		assertTrue(graph.addState(state2)== null);
+		assertTrue(graph.addState(state3)== null);
+		assertTrue(graph.addState(state4)== null);
+		assertNotNull(graph);
+		String html =
+	        "<body><div id='div1'>Google!</div><a id='achr' href='http://www.google.ca'>Google</a></body>";
+
+		Document dom = Helper.getDocument(html);
+		assertNotNull(dom);
+		Element element1 = dom.getElementById("div1");
+		Eventable clickable1 = new Eventable(element1, EventType.click);
+		assertTrue(graph.addEdge(state3, state4, clickable1));
+		
+		Element element2 = dom.getElementById("achr");
+		Eventable clickable2 = new Eventable(element2, EventType.click);
+		
+		assertTrue(graph.addEdge(state3, state4, clickable2));
+		
+		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
+		Javis javis = new Javis();
+		javis.stateCategorization(clickables);
+		assertEquals(1,Javis.getVisibleState());
+		assertEquals(0,Javis.getInvisibleState());
+		assertEquals(1, Javis.getInvisibleEdge());
+		assertEquals(1, Javis.getVisibleEdge());
+	}
+}
+
+
