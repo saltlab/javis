@@ -112,15 +112,13 @@ public class Javis implements PostCrawlingPlugin {
 			String id = name.substring(5, name.length());
 			int ID = Integer.parseInt(id);
 			if(stateCondition[ID-1].equals("invisible")){
-				/*try {
-				//	getDomDifferences.getDifferences(previous.getDom(), s.getDom() , id);
+				try {
+					getDomDifferences.getDifferences(previous.getDom(), s.getDom() , id);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
+				}
 			}
 			previous = s;
 		}
@@ -148,7 +146,6 @@ public class Javis implements PostCrawlingPlugin {
 				out.flush();
 				out.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		}			

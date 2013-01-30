@@ -1,0 +1,1 @@
+<html><body><div id='div2'>Bye</div><img id='img1' width='23' height='21'/></body></html>

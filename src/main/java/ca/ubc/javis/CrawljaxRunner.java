@@ -177,21 +177,14 @@ public class CrawljaxRunner  {
 		errorLogger.addHandler(xml);
 	
 		System.out.println("start");
-		String[] urlArray= new String[418];
-		urlArray=GetUrls.getArray();
+		String[] urlArray= new String[400];
+		urlArray=GetUrls.getArray("C:\\Users\\Jana\\Desktop\\DesktopItems7\\AlexaURLs1.txt",400);
 		for(int i=0;i<1;i++){
 			try {
 				
-			/*	counter=i;
+				counter=i;
 				File file = new File("C:\\svn_repos\\saltlab\\trunk\\code\\javis\\"+i);
-				file.mkdir();
-				File totalChange = new File("C:\\svn_repos\\saltlab\\trunk\\code\\javis\\"+i+"\\TotalChange.txt");
-				try {
-					totalChange.createNewFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/				
+				file.mkdir();			
 				urlArray[i]="http://www.ece.ubc.ca/~janab";
 				System.setProperty("webdriver.firefox.bin" ,"C:\\Program Files (x86)\\Mozilla Firefox\\firefox" );
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));

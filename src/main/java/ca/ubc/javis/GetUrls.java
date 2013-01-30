@@ -5,29 +5,21 @@ import java.io.*;
 
 public class GetUrls {
 
-	public static String[] getArray(){
+	public static String[] getArray(String path,int size){
 		Scanner x = null;
 		try {
-			x = new Scanner(new File("C:\\Users\\Jana\\Desktop\\AlexaURLs1.txt"));
+			x = new Scanner(new File(path));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String [] array=new String[416];
+		String [] array=new String[size];
 		int i=0;
 		while(x.hasNext()){
 			array[i]=x.next();
 			i++;
 		}
 		return array;
-	}
-	
-	public static void main(String[] args) {
-		String[] urlArray= new String[418];
-		urlArray=GetUrls.getArray();
-		for(int j=0;j<urlArray.length;j++)
-			System.out.println((j+1)+": "+urlArray[j]);
-
 	}
 
 }

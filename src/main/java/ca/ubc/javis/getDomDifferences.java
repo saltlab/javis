@@ -24,7 +24,6 @@ public class getDomDifferences{
 			out2.write(next);
 			out2.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
