@@ -124,7 +124,7 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		myLogger.addHandler(myFileHandler);
 		myLogger.addHandler(Xmlfh);
-		myLogger.log(Level.ALL, "Visibles: "+visibleState+" Invisibles: "+invisibleState+" Visible Edges: "+visibleEdge+" Invisible Edges: "+invisibleEdge+"-------------Edges---------"+"\nVisible Edges are:\n");
+		myLogger.log(Level.ALL, "Visibles: "+visibleState+" Invisibles: "+invisibleState+" Visible Edges: "+visibleEdge+" Invisible Edges: "+invisibleEdge+"\n-------------Edges---------"+"\nVisible Edges are:\n");
 		int i;
 		for(i = 0; i<visibleEdge;i++){
 			myLogger.log(Level.ALL,visiblearray[i]);
@@ -150,7 +150,7 @@ public class Javis implements PostCrawlingPlugin {
 			}	
 		}			
 		totalDomDifferenceSize = getDomDifferenceByteSize("/ubc/ece/home/am/grads/janab/Github/javis/TotalChangeResultLog.txt");
-		printResults(totalDomDifferenceSize);
+		printResults(totalDomDifferenceSize,session);
 		
 	}
 	
@@ -385,14 +385,14 @@ public int getDomDifferenceByteSize(String path){
 		return size;
 }
 
-public void printResults(int size){
+public void printResults(int size, CrawlSession session){
 
 	FileWriter finalResults;
 	BufferedWriter out;
 	try {
 		finalResults = new FileWriter("FinalResults.txt");
 		out = new BufferedWriter(finalResults);	
-		out.write("Visible States: "+visibleState+"\nInvisible States: "+invisibleState+"\nVisible Edges: "+visibleEdge+"\nInvisible Edges: "+invisibleEdge
+		out.write("URL: "+CrawljaxRunner.URL+"\nTotal States: "+session.getStateFlowGraph().getAllStates().size()+"\nTotal Edges: "+session.getStateFlowGraph().getAllEdges().size()+"\nVisible States: "+visibleState+"\nInvisible States: "+invisibleState+"\nVisible Edges: "+visibleEdge+"\nInvisible Edges: "+invisibleEdge
 				+"\nTotalDomDifferenceSize (Bytes): "+size+"\nTotalDomDifferenceSize (KBytes): "+(size/1024)+"\n--------Clickables---------"+"\nA Visible: "+avisibleCounter+"\nA Invisible: "+ainvisibleCounter+
 				"\nDiv: "+divCounter+"\nSpan: "+spanCounter+"\nImg Visible: "+imgvisibleCounter+"\nImg Invisible: "+imginvisibleCounter+
 				"\nInput: "+inputCounter+"\nButton: "+buttonCounter);

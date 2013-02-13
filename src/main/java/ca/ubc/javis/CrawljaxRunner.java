@@ -10,6 +10,7 @@ import java.util.logging.SimpleFormatter;
 import java.util.logging.XMLFormatter;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.io.FileUtils;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
@@ -28,11 +29,11 @@ public class CrawljaxRunner  {
 	 * @param args
 	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 3;
+	private static final int MAX_STATES = 50;
 	private static Logger urlLogger = Logger.getLogger("URL-logfile");
 	private static Logger errorLogger = Logger.getLogger(CrawljaxRunner.class.getName());
 	public static int cons=0,counter=0;
-	
+	public static String URL;
 	
 	private static void GetTrace(Exception e)
 	{
@@ -46,7 +47,7 @@ public class CrawljaxRunner  {
 	    }
 	}
 	private static CrawlSpecification getCrawlSpecification(String URLstring) {
-		
+		URL = URLstring;
 		String  randomUrl = "";
 		java.net.URI uri;
 		HttpURLConnection conn = null;
@@ -112,6 +113,7 @@ public class CrawljaxRunner  {
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_STATES);
 		crawler.setDepth(MAX_CRAWL_DEPTH);
+		crawler.setMaximumRuntime(10800);
 		
 		crawler.setInputSpecification(getInputSpecification());
 		String initialization="",resticting="";
@@ -121,9 +123,9 @@ public class CrawljaxRunner  {
 		if(initialization.contains("org"))
 			second = initialization.indexOf("org");
 		else
-			second = URLstring.indexOf("com");
-	//	resticting = initialization.substring(first+1,second-1);
-	//	crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
+			second = URLstring.indexOf(".com");
+		resticting = initialization.substring(first+1,second-1);
+		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
 		
@@ -131,8 +133,6 @@ public class CrawljaxRunner  {
 
 	private static InputSpecification getInputSpecification() {
 		InputSpecification input = new InputSpecification();
-
-		// enter "Crawljax" in the search field
 		input.field("q").setValue("Crawljax");
 		return input;
 	}
@@ -178,21 +178,19 @@ public class CrawljaxRunner  {
 	
 		System.out.println("start");
 		String[] urlArray= new String[400];
-		urlArray=GetUrls.getArray("C:\\Users\\Jana\\Desktop\\DesktopItems7\\AlexaURLs1.txt",400);
-		for(int i=0;i<1;i++){
+		urlArray=GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt",400);
+		for(int i=15;i<16;i++){
 			try {
 				
 				counter=i;
-				File file = new File("C:\\svn_repos\\saltlab\\trunk\\code\\javis\\"+i);
-				file.mkdir();			
-				urlArray[i]="http://www.ece.ubc.ca/~janab";
-				System.setProperty("webdriver.firefox.bin" ,"C:\\Program Files (x86)\\Mozilla Firefox\\firefox" );
+				
+				System.setProperty("webdriver.firefox.bin" ,"//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox" );
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
 				
 				System.out.println("success 1");
 
 				crawljax.run(); 
-
+				Copying(i);
 				System.out.println("success 2");
 
 			} catch (CrawljaxException e) {
@@ -216,6 +214,19 @@ public class CrawljaxRunner  {
 
 		}
 			
+	}
+	private static void Copying(int i) {
+		File file = new File("//ubc//ece//home//am//grads//janab//JavisResults//"+i);
+		file.mkdir();	
+		File source = new File("/ubc/ece/home/am/grads/janab/Github/javis/");
+		File dest = new File("//ubc//ece//home//am//grads//janab//JavisResults//"+i);
+		try {
+		    FileUtils.copyDirectory(source, dest);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+	
+		
 	}
 	
 
