@@ -24,7 +24,7 @@ public class GetCandidateElements implements PreStateCrawlingPlugin{
 			List<CandidateElement> candidateElements) {
 	
 	try {
-		FileWriter fstream1 = new FileWriter("CandidateElementCounter.txt",true);
+		FileWriter fstream1 = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//CandidateElementCounter.txt",true);
 		BufferedWriter out1 = new BufferedWriter(fstream1);
 		for(CandidateElement candidateElement:candidateElements)
 			for(int i=0;i<6;i++){

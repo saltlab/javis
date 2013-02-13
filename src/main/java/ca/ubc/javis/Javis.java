@@ -84,10 +84,10 @@ public class Javis implements PostCrawlingPlugin {
 		FileHandler myFileHandler = null;
 		FileHandler Xmlfh = null;
 		try {
-			myFileHandler = new FileHandler("Log.txt");
+			myFileHandler = new FileHandler(CrawljaxRunner.path+CrawljaxRunner.counter+"//Log.txt");
 			myFileHandler.setFormatter(new SimpleFormatter());
 			
-			Xmlfh = new FileHandler("log.xml");
+			Xmlfh = new FileHandler(CrawljaxRunner.path+CrawljaxRunner.counter+"//log.xml");
 			Xmlfh.setFormatter(new XMLFormatter());
 			
 			
@@ -137,11 +137,11 @@ public class Javis implements PostCrawlingPlugin {
 		Xmlfh.flush();
 		myFileHandler.close();
 		Xmlfh.close();
-		File domDifference = new File("/ubc/ece/home/am/grads/janab/Github/javis/TotalChangeResultLog.txt");
+		File domDifference = new File(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalChangeResultLog.txt");
 		if(!domDifference.exists()){
 			FileWriter totalDomDifferences;
 			try {
-				totalDomDifferences = new FileWriter("TotalChangeResultLog.txt");
+				totalDomDifferences = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalChangeResultLog.txt");
 				BufferedWriter out = new BufferedWriter(totalDomDifferences);
 				out.flush();
 				out.close();
@@ -149,7 +149,7 @@ public class Javis implements PostCrawlingPlugin {
 				e.printStackTrace();
 			}	
 		}			
-		totalDomDifferenceSize = getDomDifferenceByteSize("/ubc/ece/home/am/grads/janab/Github/javis/TotalChangeResultLog.txt");
+		totalDomDifferenceSize = getDomDifferenceByteSize(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalChangeResultLog.txt");
 		printResults(totalDomDifferenceSize,session);
 		
 	}
@@ -235,7 +235,6 @@ public void stateCategorization(Set <Eventable> event){
 					setInvisibleEdge(getInvisibleEdge() + 1);
 				}
 				if(edge.getElement().getTag().equalsIgnoreCase("a")){
-					anchorVisible = anchorVisibilityChecking(edge);
 					if(anchorVisible){
 						visiblearray[getVisibleEdge()] = edge.toString();
 						setVisibleEdge(getVisibleEdge() + 1);
@@ -390,7 +389,7 @@ public void printResults(int size, CrawlSession session){
 	FileWriter finalResults;
 	BufferedWriter out;
 	try {
-		finalResults = new FileWriter("FinalResults.txt");
+		finalResults = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//FinalResults.txt");
 		out = new BufferedWriter(finalResults);	
 		out.write("URL: "+CrawljaxRunner.URL+"\nTotal States: "+session.getStateFlowGraph().getAllStates().size()+"\nTotal Edges: "+session.getStateFlowGraph().getAllEdges().size()+"\nVisible States: "+visibleState+"\nInvisible States: "+invisibleState+"\nVisible Edges: "+visibleEdge+"\nInvisible Edges: "+invisibleEdge
 				+"\nTotalDomDifferenceSize (Bytes): "+size+"\nTotalDomDifferenceSize (KBytes): "+(size/1024)+"\n--------Clickables---------"+"\nA Visible: "+avisibleCounter+"\nA Invisible: "+ainvisibleCounter+

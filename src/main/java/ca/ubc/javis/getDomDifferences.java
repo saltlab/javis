@@ -15,11 +15,11 @@ public class getDomDifferences{
 		
 		FileWriter fstream1,fstream2;
 		try {
-			fstream1 = new FileWriter("firstDom.txt");
+			fstream1 = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//firstDom.txt");
 			BufferedWriter out1 = new BufferedWriter(fstream1);
 			out1.write(previous);
 			out1.close();
-			fstream2 = new FileWriter("secondDom.txt");
+			fstream2 = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//secondDom.txt");
 			BufferedWriter out2 = new BufferedWriter(fstream2);
 			out2.write(next);
 			out2.close();
@@ -27,8 +27,8 @@ public class getDomDifferences{
 			e.printStackTrace();
 		}
 		
-	String result = TargetedDiff.getTargetDiff("/ubc/ece/home/am/grads/janab/janab/saltlab/trunk/code/code/javis/firstDom.txt",
-                "/ubc/ece/home/am/grads/janab/janab/saltlab/trunk/code/code/javis/secondDom.txt");
+	String result = TargetedDiff.getTargetDiff(CrawljaxRunner.path+CrawljaxRunner.counter+"//firstDom.txt",
+                CrawljaxRunner.path+CrawljaxRunner.counter+"//secondDom.txt");
 	buffer.append(result);
 	printResult(result,buffer.toString().trim(),id);
 		
@@ -37,16 +37,15 @@ public class getDomDifferences{
 	public static void printResult(String str1, String str2,String id) throws SecurityException, IOException{
 		FileWriter fstream1,fstream2;
 		try {
-			fstream1 = new FileWriter("TotalChangeResultLog.txt");
+			fstream1 = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalChangeResultLog.txt");
 			BufferedWriter out1 = new BufferedWriter(fstream1);
 			out1.write(str2);
 			out1.close();
-			fstream2 = new FileWriter("individualChangeResultLog"+id+".txt");
+			fstream2 = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//individualChangeResultLog"+id+".txt");
 			BufferedWriter out2 = new BufferedWriter(fstream2);
 			out2.write(str1);
 			out2.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

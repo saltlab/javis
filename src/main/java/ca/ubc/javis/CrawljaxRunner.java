@@ -29,11 +29,13 @@ public class CrawljaxRunner  {
 	 * @param args
 	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 50;
+	private static final int MAX_STATES = 3;
 	private static Logger urlLogger = Logger.getLogger("URL-logfile");
 	private static Logger errorLogger = Logger.getLogger(CrawljaxRunner.class.getName());
 	public static int cons=0,counter=0;
 	public static String URL;
+	public static String path = "//ubc//ece//home//am//grads//janab//JavisResults//";
+	public static String javaPath = "//ubc//ece//home//am//grads//janab//Github//javis//";
 	
 	private static void GetTrace(Exception e)
 	{
@@ -60,10 +62,10 @@ public class CrawljaxRunner  {
 			urlLogger.setLevel(Level.ALL);
 			
 			try {
-				myFileHandler = new FileHandler("URLLog.txt");
+				myFileHandler = new FileHandler(path+counter+"//URLLog.txt");
 				myFileHandler.setFormatter(new SimpleFormatter());
 				
-				Xmlfh = new FileHandler("urlLog.xml");
+				Xmlfh = new FileHandler(path+counter+"//urlLog.xml");
 				Xmlfh.setFormatter(new XMLFormatter());
 			} catch (SecurityException e) {
 				
@@ -124,7 +126,7 @@ public class CrawljaxRunner  {
 			second = initialization.indexOf("org");
 		else
 			second = URLstring.indexOf(".com");
-		resticting = initialization.substring(first+1,second-1);
+	//	resticting = initialization.substring(first+1,second-1);
 		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
@@ -156,31 +158,36 @@ public class CrawljaxRunner  {
 		errorLogger.setLevel(Level.ALL);
 		FileHandler fl=null;
 		FileHandler xml=null;
-		try{
-			fl=new FileHandler("ErrorLog.txt");
-			fl.setFormatter(new SimpleFormatter());
-			xml=new FileHandler("ErrorLog.xml");
-			xml.setFormatter(new XMLFormatter());
-		} catch (SecurityException e) {
-			
-			errorLogger.log(Level.WARNING, e.toString());
-			GetTrace(e);
-	
-		} catch (IOException e) {
-			
-			errorLogger.log(Level.WARNING, e.toString());
-			GetTrace(e);
-	
-		}
 		
-		errorLogger.addHandler(fl);
-		errorLogger.addHandler(xml);
 	
 		System.out.println("start");
 		String[] urlArray= new String[400];
 		urlArray=GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt",400);
 		for(int i=15;i<16;i++){
 			try {
+				urlArray[i]="http://www.ece.ubc.ca/~janab/VisInvisExperiment.html";
+				File file = new File(path+i);
+				file.mkdir();	
+				
+				try{
+					fl=new FileHandler(path+i+"//ErrorLog.txt");
+					fl.setFormatter(new SimpleFormatter());
+					xml=new FileHandler(path+i+"//ErrorLog.xml");
+					xml.setFormatter(new XMLFormatter());
+				} catch (SecurityException e) {
+					
+					errorLogger.log(Level.WARNING, e.toString());
+					GetTrace(e);
+			
+				} catch (IOException e) {
+					
+					errorLogger.log(Level.WARNING, e.toString());
+					GetTrace(e);
+			
+				}
+				
+				errorLogger.addHandler(fl);
+				errorLogger.addHandler(xml);
 				
 				counter=i;
 				
@@ -190,9 +197,11 @@ public class CrawljaxRunner  {
 				System.out.println("success 1");
 
 				crawljax.run(); 
-				Copying(i);
 				System.out.println("success 2");
-
+				
+				File logFile = new File(javaPath+"log4j.log");
+				logFile.renameTo(new File(path+i+"//log4j.log"));
+				
 			} catch (CrawljaxException e) {
 				
 				errorLogger.log(Level.WARNING, e.toString());
@@ -214,19 +223,6 @@ public class CrawljaxRunner  {
 
 		}
 			
-	}
-	private static void Copying(int i) {
-		File file = new File("//ubc//ece//home//am//grads//janab//JavisResults//"+i);
-		file.mkdir();	
-		File source = new File("/ubc/ece/home/am/grads/janab/Github/javis/");
-		File dest = new File("//ubc//ece//home//am//grads//janab//JavisResults//"+i);
-		try {
-		    FileUtils.copyDirectory(source, dest);
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-	
-		
 	}
 	
 
