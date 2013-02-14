@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.FileHandler;
@@ -43,32 +44,94 @@ public class Javis implements PostCrawlingPlugin {
 	public static String[] stateCondition = new String[500];
 	public static StringBuffer buffer = new StringBuffer();
 
-	public static void setVisibleState(int visibleState) {
-		Javis.visibleState = visibleState;
+	public static void setVisibleState(int visibleStates) {
+		visibleState = visibleStates;
 	}
 
 	public static int getVisibleState() {
 		return visibleState;
 	}
+	
+	public static void setDivCounter(int div) {
+		divCounter = div;
+	}
 
-	public static void setInvisibleState(int invisibleState) {
-		Javis.invisibleState = invisibleState;
+	public static int getDivCounter() {
+		return divCounter;
+	}
+	
+	public static void setSpanCounter(int span) {
+		spanCounter = span;
+	}
+
+	public static int getSpanCounter() {
+		return spanCounter;
+	}
+	
+	public static void setInputCounter(int input) {
+		inputCounter = input;
+	}
+
+	public static int getInputCounter() {
+		return inputCounter;
+	}
+	
+	public static void setButtonCounter(int button) {
+		buttonCounter = button;
+	}
+
+	public static int getButtonCounter() {
+		return buttonCounter;
+	}
+	public static void setAVisCounter(int avis) {
+		avisibleCounter = avis;
+	}
+
+	public static int getAVisCounter() {
+		return avisibleCounter;
+	}
+	public static void setAInvisCounter(int ainvis) {
+		ainvisibleCounter = ainvis;
+	}
+
+	public static int getAIvnisCounter() {
+		return ainvisibleCounter;
+	}
+	
+	public static void setImgVisCounter(int imgvis) {
+		imgvisibleCounter = imgvis;
+	}
+
+	public static int getImgVisCounter() {
+		return imgvisibleCounter;
+	}
+	
+	public static void setImgInisCounter(int imginvis) {
+		imginvisibleCounter = imginvis;
+	}
+
+	public static int getImgInvisCounter() {
+		return imginvisibleCounter;
+	}
+	
+	public static void setInvisibleState(int invisibleStates) {
+		invisibleState = invisibleStates;
 	}
 
 	public static int getInvisibleState() {
 		return invisibleState;
 	}
 
-	public static void setVisibleEdge(int visibleEdge) {
-		Javis.visibleEdge = visibleEdge;
+	public static void setVisibleEdge(int visibleEdges) {
+		visibleEdge = visibleEdges;
 	}
 
 	public static int getVisibleEdge() {
 		return visibleEdge;
 	}
 
-	public static void setInvisibleEdge(int invisibleEdge) {
-		Javis.invisibleEdge = invisibleEdge;
+	public static void setInvisibleEdge(int invisibleEdges) {
+		invisibleEdge = invisibleEdges;
 	}
 
 	public static int getInvisibleEdge() {
@@ -385,8 +448,8 @@ public int getDomDifferenceByteSize(String path){
 }
 
 public void printResults(int size, CrawlSession session){
-
 	FileWriter finalResults;
+	long timing = System.currentTimeMillis()-CrawljaxRunner.startTime;
 	BufferedWriter out;
 	try {
 		finalResults = new FileWriter(CrawljaxRunner.path+CrawljaxRunner.counter+"//FinalResults.txt");
@@ -394,7 +457,7 @@ public void printResults(int size, CrawlSession session){
 		out.write("URL: "+CrawljaxRunner.URL+"\nTotal States: "+session.getStateFlowGraph().getAllStates().size()+"\nTotal Edges: "+session.getStateFlowGraph().getAllEdges().size()+"\nVisible States: "+visibleState+"\nInvisible States: "+invisibleState+"\nVisible Edges: "+visibleEdge+"\nInvisible Edges: "+invisibleEdge
 				+"\nTotalDomDifferenceSize (Bytes): "+size+"\nTotalDomDifferenceSize (KBytes): "+(size/1024)+"\n--------Clickables---------"+"\nA Visible: "+avisibleCounter+"\nA Invisible: "+ainvisibleCounter+
 				"\nDiv: "+divCounter+"\nSpan: "+spanCounter+"\nImg Visible: "+imgvisibleCounter+"\nImg Invisible: "+imginvisibleCounter+
-				"\nInput: "+inputCounter+"\nButton: "+buttonCounter);
+				"\nInput: "+inputCounter+"\nButton: "+buttonCounter+"\nStart Time: "+timing);
 
 		out.close();	
 	} catch (IOException e) {

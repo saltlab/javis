@@ -3,6 +3,7 @@ package ca.ubc.javis;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +30,14 @@ public class CrawljaxRunner  {
 	 * @param args
 	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 3;
+	private static final int MAX_STATES = 5;
 	private static Logger urlLogger = Logger.getLogger("URL-logfile");
 	private static Logger errorLogger = Logger.getLogger(CrawljaxRunner.class.getName());
 	public static int cons=0,counter=0;
 	public static String URL;
 	public static String path = "//ubc//ece//home//am//grads//janab//JavisResults//";
 	public static String javaPath = "//ubc//ece//home//am//grads//janab//Github//javis//";
+	public static long startTime;
 	
 	private static void GetTrace(Exception e)
 	{
@@ -124,9 +126,11 @@ public class CrawljaxRunner  {
 		first = initialization.indexOf(".");
 		if(initialization.contains("org"))
 			second = initialization.indexOf("org");
+		else if(initialization.contains(".ru"))
+			second = URLstring.indexOf(".ru");
 		else
 			second = URLstring.indexOf(".com");
-	//	resticting = initialization.substring(first+1,second-1);
+		resticting = initialization.substring(first+1,second-1);
 		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
@@ -163,12 +167,12 @@ public class CrawljaxRunner  {
 		System.out.println("start");
 		String[] urlArray= new String[400];
 		urlArray=GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt",400);
-		for(int i=15;i<16;i++){
+		for(int i=20;i<21;i++){
 			try {
-				urlArray[i]="http://www.ece.ubc.ca/~janab/VisInvisExperiment.html";
+				startTime = System.currentTimeMillis();
 				File file = new File(path+i);
 				file.mkdir();	
-				
+				clearProperties();
 				try{
 					fl=new FileHandler(path+i+"//ErrorLog.txt");
 					fl.setFormatter(new SimpleFormatter());
@@ -223,6 +227,24 @@ public class CrawljaxRunner  {
 
 		}
 			
+	}
+	private static void clearProperties() {
+		Javis.setVisibleEdge(0);
+		Javis.setInvisibleEdge(0);
+		Javis.setInvisibleState(0);
+		Javis.setVisibleState(0);
+		Javis.setDivCounter(0);
+		Javis.setAInvisCounter(0);
+		Javis.setAVisCounter(0);
+		Javis.setButtonCounter(0);
+		Javis.setImgVisCounter(0);
+		Javis.setInputCounter(0);
+		Javis.setSpanCounter(0);
+		Javis.setImgInisCounter(0);
+		for(int i=0;i<Javis.visiblearray.length;i++)
+			Javis.visiblearray[i]="";
+		for(int i=0;i<Javis.invisiblearray.length;i++)
+			Javis.invisiblearray[i]="";
 	}
 	
 
