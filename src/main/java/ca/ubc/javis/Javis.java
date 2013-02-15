@@ -383,7 +383,7 @@ public class Javis implements PostCrawlingPlugin {
 			        + "\nA Invisible: " + sfgInformation.getAInvisCounter() + "\nDiv: " + sfgInformation.getDivCounter() + "\nSpan: "
 			        + sfgInformation.getSpanCounter() + "\nImg Visible: " + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
 			        + sfgInformation.getImgInvisCounter() + "\nInput: " + sfgInformation.getInputCounter() + "\nButton: "
-			        + sfgInformation.getButtonCounter() + "\nStart Time: " + timing);
+			        + sfgInformation.getButtonCounter() + "\nElapsed Time (milliseconds): " + timing);
 
 			out.close();
 		} catch (IOException e) {

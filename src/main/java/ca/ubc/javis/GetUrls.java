@@ -16,7 +16,6 @@ public class GetUrls {
 	public static String[] getArray(String path, int size) {
 		List<String> readLines = null;
 		try {
-			// TODO use the list instead of the array everywhere else.
 			readLines = Files.readLines(new File(path), Charsets.UTF_8);
 		} catch (IOException e) {
 			LOG.error("Could not get list of web sites");
