@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.XMLFormatter;
 
+import org.apache.commons.io.Charsets;
 import org.w3c.dom.Node;
 
 import com.crawljax.core.CrawlSession;
@@ -24,6 +25,7 @@ import com.crawljax.core.state.Attribute;
 import com.crawljax.core.state.Element;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateVertex;
+import com.google.common.io.Files;
 
 public class Javis implements PostCrawlingPlugin {
 
@@ -333,7 +335,6 @@ public class Javis implements PostCrawlingPlugin {
 
 		int size = 0;
 		StringBuffer buffer = new StringBuffer();
-
 		FileReader file;
 		try {
 
@@ -363,16 +364,10 @@ public class Javis implements PostCrawlingPlugin {
 		return size;
 	}
 
-	public void printResults(int size, CrawlSession session) {
-		FileWriter finalResults;
+	public void printResults(int size, CrawlSession session){
+		
 		long timing = System.currentTimeMillis() - CrawljaxRunner.startTime;
-		BufferedWriter out;
-		try {
-			finalResults =
-			        new FileWriter(CrawljaxRunner.path + CrawljaxRunner.counter
-			                + "//FinalResults.txt");
-			out = new BufferedWriter(finalResults);
-			out.write("URL: " + CrawljaxRunner.URL + "\nTotal States: "
+		String result = ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
 			        + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
 			        + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
 			        + sfgInformation.getVisibleState() + "\nInvisible States: " + sfgInformation.getInvisibleState()
@@ -384,11 +379,12 @@ public class Javis implements PostCrawlingPlugin {
 			        + sfgInformation.getSpanCounter() + "\nImg Visible: " + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
 			        + sfgInformation.getImgInvisCounter() + "\nInput: " + sfgInformation.getInputCounter() + "\nButton: "
 			        + sfgInformation.getButtonCounter() + "\nElapsed Time (milliseconds): " + timing);
-
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+				try {
+					Files.write(result, new File(CrawljaxRunner.path + CrawljaxRunner.counter+ "//FinalResults.txt"), Charsets.UTF_8);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	
 
 	}
 
