@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
+import com.crawljax.core.Crawler;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
@@ -51,32 +52,28 @@ public class CrawljaxRunner {
 		java.net.URI uri;
 		HttpURLConnection conn = null;
 		try {
-
 			uri = new java.net.URI(URLstring);
 			conn = (HttpURLConnection) uri.toURL().openConnection();
-
 			try {
 				int r = conn.getResponseCode();
 				randomUrl = conn.getURL().toString();
 			} catch (IOException e) {
-
 				ERROR_LOGGER.warn(e.toString());
 				GetTrace(e);
 				e.printStackTrace();
 			}
 			URL_LOGGER.info("URL" + (cons + 1) + ": " + randomUrl);
-
-			System.out.println(randomUrl + "----------");
-
 			conn.connect();
 		} catch (Exception e) {
-
 			ERROR_LOGGER.warn(e.toString());
 			GetTrace(e);
-
 		}
-		CrawlSpecification crawler = new CrawlSpecification(URLstring);
+		return configuringCrawlSpecification(URLstring);
 
+	}
+
+	private static CrawlSpecification configuringCrawlSpecification(String URLstring) {
+		CrawlSpecification crawler = new CrawlSpecification(URLstring);
 		crawler.click("div");
 		crawler.click("a");
 		crawler.click("button");
@@ -105,7 +102,7 @@ public class CrawljaxRunner {
 		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
-
+		
 	}
 
 	private static InputSpecification getInputSpecification() {
@@ -173,22 +170,21 @@ public class CrawljaxRunner {
 	}
 
 	private static void clearProperties() {
-		Javis.setVisibleEdge(0);
-		Javis.setInvisibleEdge(0);
-		Javis.setInvisibleState(0);
-		Javis.setVisibleState(0);
-		Javis.setDivCounter(0);
-		Javis.setAInvisCounter(0);
-		Javis.setAVisCounter(0);
-		Javis.setButtonCounter(0);
-		Javis.setImgVisCounter(0);
-		Javis.setInputCounter(0);
-		Javis.setSpanCounter(0);
-		Javis.setImgInisCounter(0);
-		for (int i = 0; i < Javis.visiblearray.length; i++)
-			Javis.visiblearray[i] = "";
-		for (int i = 0; i < Javis.invisiblearray.length; i++)
-			Javis.invisiblearray[i] = "";
+		Javis.sfgInformation.setVisibleEdge(0);
+		Javis.sfgInformation.setInvisibleEdge(0);
+		Javis.sfgInformation.setInvisibleState(0);
+		Javis.sfgInformation.setVisibleState(0);
+		Javis.sfgInformation.setDivCounter(0);
+		Javis.sfgInformation.setAInvisCounter(0);
+		Javis.sfgInformation.setAVisCounter(0);
+		Javis.sfgInformation.setButtonCounter(0);
+		Javis.sfgInformation.setImgVisCounter(0);
+		Javis.sfgInformation.setInputCounter(0);
+		Javis.sfgInformation.setSpanCounter(0);
+		Javis.sfgInformation.setImgInisCounter(0);
+		Javis.visiblearray.clear();
+		Javis.invisiblearray.clear();
+		Javis.stateCondition.clear();
 	}
 
 }

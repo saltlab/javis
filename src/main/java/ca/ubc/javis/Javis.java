@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.FileHandler;
@@ -26,123 +27,13 @@ import com.crawljax.core.state.StateVertex;
 
 public class Javis implements PostCrawlingPlugin {
 
-	// TODO begin other class
-	private static int invisibleState;
-	private static int visibleState;
-	private static int invisibleEdge;
-	private static int visibleEdge;
-	private static int divCounter;
-	private static int spanCounter;
-	private static int inputCounter;
-	private static int buttonCounter;
-	private static int avisibleCounter;
-	private static int ainvisibleCounter;
-	private static int imgvisibleCounter;
-	private static int imginvisibleCounter;
-	// end
-
 	private static Logger myLogger = Logger.getLogger(Javis.class.getName());
-	public static String[] visiblearray = new String[500];
-	public static String[] invisiblearray = new String[500];
-	public static String[] stateCondition = new String[500];
+	public static ArrayList <String> visiblearray = new ArrayList<String>() ;
+	public static ArrayList<String> invisiblearray = new ArrayList<String>();
+	public static ArrayList<String> stateCondition = new ArrayList<String>();
 	public static StringBuffer buffer = new StringBuffer();
-
-	public static void setVisibleState(int visibleStates) {
-		visibleState = visibleStates;
-	}
-
-	public static int getVisibleState() {
-		return visibleState;
-	}
-
-	public static void setDivCounter(int div) {
-		divCounter = div;
-	}
-
-	public static int getDivCounter() {
-		return divCounter;
-	}
-
-	public static void setSpanCounter(int span) {
-		spanCounter = span;
-	}
-
-	public static int getSpanCounter() {
-		return spanCounter;
-	}
-
-	public static void setInputCounter(int input) {
-		inputCounter = input;
-	}
-
-	public static int getInputCounter() {
-		return inputCounter;
-	}
-
-	public static void setButtonCounter(int button) {
-		buttonCounter = button;
-	}
-
-	public static int getButtonCounter() {
-		return buttonCounter;
-	}
-
-	public static void setAVisCounter(int avis) {
-		avisibleCounter = avis;
-	}
-
-	public static int getAVisCounter() {
-		return avisibleCounter;
-	}
-
-	public static void setAInvisCounter(int ainvis) {
-		ainvisibleCounter = ainvis;
-	}
-
-	public static int getAIvnisCounter() {
-		return ainvisibleCounter;
-	}
-
-	public static void setImgVisCounter(int imgvis) {
-		imgvisibleCounter = imgvis;
-	}
-
-	public static int getImgVisCounter() {
-		return imgvisibleCounter;
-	}
-
-	public static void setImgInisCounter(int imginvis) {
-		imginvisibleCounter = imginvis;
-	}
-
-	public static int getImgInvisCounter() {
-		return imginvisibleCounter;
-	}
-
-	public static void setInvisibleState(int invisibleStates) {
-		invisibleState = invisibleStates;
-	}
-
-	public static int getInvisibleState() {
-		return invisibleState;
-	}
-
-	public static void setVisibleEdge(int visibleEdges) {
-		visibleEdge = visibleEdges;
-	}
-
-	public static int getVisibleEdge() {
-		return visibleEdge;
-	}
-
-	public static void setInvisibleEdge(int invisibleEdges) {
-		invisibleEdge = invisibleEdges;
-	}
-
-	public static int getInvisibleEdge() {
-		return invisibleEdge;
-	}
-
+	public static StateFlowGraphInformation sfgInformation = new StateFlowGraphInformation();
+	
 	@Override
 	public void postCrawling(CrawlSession session) {
 		int totalDomDifferenceSize;
@@ -159,10 +50,10 @@ public class Javis implements PostCrawlingPlugin {
 			Xmlfh.setFormatter(new XMLFormatter());
 
 		} catch (SecurityException e) {
-			System.out.println("cannot open Log.txt for logging purpose");
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("cannot open Log.txt for logging purpose");
+
 			e.printStackTrace();
 		}
 
@@ -178,7 +69,7 @@ public class Javis implements PostCrawlingPlugin {
 			stateCategorization(eve);
 			String id = name.substring(5, name.length());
 			int ID = Integer.parseInt(id);
-			if (stateCondition[ID - 1].equals("invisible")) {
+			if (stateCondition.get(ID - 1).equals("invisible")) {
 				try {
 					getDomDifferences.getDifferences(previous.getDom(), s.getDom(), id);
 				} catch (IOException e) {
@@ -191,16 +82,16 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		myLogger.addHandler(myFileHandler);
 		myLogger.addHandler(Xmlfh);
-		myLogger.log(Level.ALL, "Visibles: " + visibleState + " Invisibles: " + invisibleState
-		        + " Visible Edges: " + visibleEdge + " Invisible Edges: " + invisibleEdge
+		myLogger.log(Level.ALL, "Visible States: " + sfgInformation.getVisibleState() + " Invisible States: " + sfgInformation.getInvisibleState()
+		        + " Visible Edges: " + sfgInformation.getVisibleEdge() + " Invisible Edges: " + sfgInformation.getInvisibleEdge()
 		        + "\n-------------Edges---------" + "\nVisible Edges are:\n");
 		int i;
-		for (i = 0; i < visibleEdge; i++) {
-			myLogger.log(Level.ALL, visiblearray[i]);
+		for (i = 0; i < sfgInformation.getVisibleEdge(); i++) {
+			myLogger.log(Level.ALL, visiblearray.get(i));
 		}
 		myLogger.log(Level.ALL, "---------------\n Invisible Edges are:");
-		for (i = 0; i < invisibleEdge; i++) {
-			myLogger.log(Level.ALL, invisiblearray[i]);
+		for (i = 0; i < sfgInformation.getInvisibleEdge(); i++) {
+			myLogger.log(Level.ALL, invisiblearray.get(i));
 		}
 		myFileHandler.flush();
 		Xmlfh.flush();
@@ -252,15 +143,15 @@ public class Javis implements PostCrawlingPlugin {
 					}
 					if (anchorVisible || imgVisible) {
 						visibleEdge = true;
-						stateCondition[getInvisibleState() + getVisibleState()] = "visible";
-						setVisibleState(getVisibleState() + 1);
+						stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
+						sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
 						break;
 					}
 				}
 			}
 			if (!visibleEdge) {
-				stateCondition[getInvisibleState() + getVisibleState()] = "invisible";
-				setInvisibleState(getInvisibleState() + 1);
+				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "invisible");
+				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
 			}
 			java.util.Iterator<Eventable> edg1 = event.iterator();
 
@@ -276,27 +167,27 @@ public class Javis implements PostCrawlingPlugin {
 			edge = edg1.next();
 			if (isRelevantTag(edge)) {
 				getEdgeInfo(edge);
-				invisiblearray[getInvisibleEdge()] = edge.toString();
-				setInvisibleEdge(getInvisibleEdge() + 1);
+				invisiblearray.add((sfgInformation.getInvisibleEdge()), edge.toString());
+				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 			}
 			if (edge.getElement().getTag().equalsIgnoreCase("a")) {
 				if (anchorVisible) {
-					visiblearray[getVisibleEdge()] = edge.toString();
-					setVisibleEdge(getVisibleEdge() + 1);
+					visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
+					sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
 				} else {
-					invisiblearray[getInvisibleEdge()] = edge.toString();
-					setInvisibleEdge(getInvisibleEdge() + 1);
+					invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
+					sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 				}
 			}
 			if (edge.getElement().getTag().toLowerCase().equalsIgnoreCase("img")) {
 				node = edge.getElement().getNode().getParentNode();
 				imgVisible = imgChecker(node, edge);
 				if (imgVisible) {
-					visiblearray[getVisibleEdge()] = edge.toString();
-					setVisibleEdge(getVisibleEdge() + 1);
+					visiblearray.add(sfgInformation.getVisibleEdge(),edge.toString());
+					sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
 				} else {
-					invisiblearray[getInvisibleEdge()] = edge.toString();
-					setInvisibleEdge(getInvisibleEdge() + 1);
+					invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
+					sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 				}
 			}
 		}
@@ -309,38 +200,38 @@ public class Javis implements PostCrawlingPlugin {
 		Eventable edge;
 		edge = edg.next();
 		if (isRelevantTag(edge)) {
-			invisiblearray[getInvisibleEdge()] = edge.toString();
-			stateCondition[getInvisibleState() + getVisibleState()] = "invisible";
-			setInvisibleState(getInvisibleState() + 1);
-			setInvisibleEdge(getInvisibleEdge() + 1);
+			invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
+			stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "invisible");
+			sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
+			sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 			getEdgeInfo(edge);
 		} else if (edge.getElement().getTag().equalsIgnoreCase("a")) {
 			anchorVisible = anchorVisibilityChecking(edge);
 			if (anchorVisible) {
-				visiblearray[getVisibleEdge()] = edge.toString();
-				stateCondition[getInvisibleState() + getVisibleState()] = "visible";
-				setVisibleState(getVisibleState() + 1);
-				setVisibleEdge(getVisibleEdge() + 1);
+				visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
+				sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
+				sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
 			} else {
-				invisiblearray[getInvisibleEdge()] = edge.toString();
-				stateCondition[getInvisibleState() + getVisibleState()] = "invisible";
-				setInvisibleState(getInvisibleState() + 1);
-				setInvisibleEdge(getInvisibleEdge() + 1);
+				invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()),"invisible");
+				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
+				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 			}
 
 		} else if (edge.getElement().getTag().toLowerCase().equalsIgnoreCase("img")) {
 			node = edge.getElement().getNode().getParentNode();
 			imgVisible = imgChecker(node, edge);
 			if (imgVisible) {
-				visiblearray[getVisibleEdge()] = edge.toString();
-				stateCondition[getInvisibleState() + getVisibleState()] = "visible";
-				setVisibleState(getVisibleState() + 1);
-				setVisibleEdge(getVisibleEdge() + 1);
+				visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
+				sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
+				sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
 			} else {
-				invisiblearray[getInvisibleEdge()] = edge.toString();
-				stateCondition[getInvisibleState() + getVisibleState()] = "invisible";
-				setInvisibleState(getInvisibleState() + 1);
-				setInvisibleEdge(getInvisibleEdge() + 1);
+				invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()),"invisible");
+				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
+				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
 			}
 		}
 	}
@@ -373,11 +264,11 @@ public class Javis implements PostCrawlingPlugin {
 				else
 					URLFlag = true;
 				if (URLFlag) {
-					avisibleCounter++;
+					sfgInformation.setAVisCounter(sfgInformation.getAVisCounter()+1);
 					visible = true;
 				} else {
 					visible = false;
-					ainvisibleCounter++;
+					sfgInformation.setAInvisCounter(sfgInformation.getAInvisCounter()+1);
 				}
 			}
 		}
@@ -386,13 +277,13 @@ public class Javis implements PostCrawlingPlugin {
 
 	public void getEdgeInfo(Eventable edge) {
 		if (edge.getElement().getTag().equals("DIV"))
-			divCounter++;
+			sfgInformation.setDivCounter(sfgInformation.getDivCounter()+1);
 		else if (edge.getElement().getTag().equals("SPAN"))
-			spanCounter++;
+			sfgInformation.setSpanCounter(sfgInformation.getSpanCounter()+1);
 		else if (edge.getElement().getTag().equals("INPUT"))
-			inputCounter++;
+			sfgInformation.setInputCounter(sfgInformation.getInputCounter());
 		else if (edge.getElement().getTag().equals("BUTTON"))
-			buttonCounter++;
+			sfgInformation.setButtonCounter(sfgInformation.getButtonCounter()+1);
 	}
 
 	public static boolean hrefInvisible(String str) {
@@ -426,14 +317,14 @@ public class Javis implements PostCrawlingPlugin {
 					Element e = new Element(node);
 					String imgHrefValue = getElementAttributes(e);
 					if (hrefInvisible(imgHrefValue)) {
-						imginvisibleCounter++;
+						sfgInformation.setImgInisCounter(sfgInformation.getImgInvisCounter()+1);
 					} else {
 						visible = true;
-						imgvisibleCounter++;
+						sfgInformation.setImgVisCounter(sfgInformation.getImgVisCounter()+1);
 					}
 				}
 			} else {
-				imginvisibleCounter++;
+				sfgInformation.setImgInisCounter(sfgInformation.getImgInvisCounter());
 			}
 		return visible;
 	}
@@ -484,15 +375,15 @@ public class Javis implements PostCrawlingPlugin {
 			out.write("URL: " + CrawljaxRunner.URL + "\nTotal States: "
 			        + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
 			        + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
-			        + visibleState + "\nInvisible States: " + invisibleState
-			        + "\nVisible Edges: " + visibleEdge + "\nInvisible Edges: " + invisibleEdge
+			        + sfgInformation.getVisibleState() + "\nInvisible States: " + sfgInformation.getInvisibleState()
+			        + "\nVisible Edges: " + sfgInformation.getVisibleEdge() + "\nInvisible Edges: " + sfgInformation.getInvisibleEdge()
 			        + "\nTotalDomDifferenceSize (Bytes): " + size
 			        + "\nTotalDomDifferenceSize (KBytes): " + (size / 1024)
-			        + "\n--------Clickables---------" + "\nA Visible: " + avisibleCounter
-			        + "\nA Invisible: " + ainvisibleCounter + "\nDiv: " + divCounter + "\nSpan: "
-			        + spanCounter + "\nImg Visible: " + imgvisibleCounter + "\nImg Invisible: "
-			        + imginvisibleCounter + "\nInput: " + inputCounter + "\nButton: "
-			        + buttonCounter + "\nStart Time: " + timing);
+			        + "\n--------Clickables---------" + "\nA Visible: " + sfgInformation.getAVisCounter()
+			        + "\nA Invisible: " + sfgInformation.getAInvisCounter() + "\nDiv: " + sfgInformation.getDivCounter() + "\nSpan: "
+			        + sfgInformation.getSpanCounter() + "\nImg Visible: " + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
+			        + sfgInformation.getImgInvisCounter() + "\nInput: " + sfgInformation.getInputCounter() + "\nButton: "
+			        + sfgInformation.getButtonCounter() + "\nStart Time: " + timing);
 
 			out.close();
 		} catch (IOException e) {
