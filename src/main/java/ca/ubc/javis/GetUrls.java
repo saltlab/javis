@@ -1,25 +1,22 @@
 package ca.ubc.javis;
 
-import java.util.Scanner;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 public class GetUrls {
 
-	public static String[] getArray(String path,int size){
-		Scanner x = null;
+	public static String[] getArray(String path, int size) {
 		try {
-			x = new Scanner(new File(path));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO use the list instead of the array everywhere else.
+			List<String> readLines = Files.readLines(new File(path), Charsets.UTF_8);
+			return readLines.toArray(new String[readLines.size()]);
+		} catch (IOException e) {
+			throw new RuntimeException("Oh no"); // TODO
 		}
-		String [] array=new String[size];
-		int i=0;
-		while(x.hasNext()){
-			array[i]=x.next();
-			i++;
-		}
-		return array;
-	}
 
+	}
 }
