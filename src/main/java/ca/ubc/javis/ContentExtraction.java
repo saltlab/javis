@@ -8,11 +8,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.Charsets;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Files;
 
 public class ContentExtraction {
 	private static final Pattern TAG_REGEX = Pattern.compile("<.+?>(.+?)</.+?>");
+	public static Logger LOG = LoggerFactory.getLogger(ContentExtraction.class);
 	
 	public void getTagValues(final String str) {
 	    final List<String> tagValues = new ArrayList<String>();
@@ -23,8 +28,7 @@ public class ContentExtraction {
 	    try {
 			Files.write(tagValues.toString(),new File(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalContent.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Cannot write to file",e);
 		}
 	}
 }

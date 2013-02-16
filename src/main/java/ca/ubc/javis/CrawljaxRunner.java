@@ -134,7 +134,7 @@ public class CrawljaxRunner {
 		for (int i = 20; i < 21; i++) {
 			try {
 				startTime = System.currentTimeMillis();
-				File file = new File(path + i);
+				File file = new File(path + i+"-"+urlArray[i]);
 				file.mkdir();
 				clearProperties();
 				urlArray[i] = "http://ece.ubc.ca/~janab/";
