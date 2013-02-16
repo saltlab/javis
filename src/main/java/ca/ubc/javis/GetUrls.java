@@ -18,9 +18,8 @@ public class GetUrls {
 		try {
 			readLines = Files.readLines(new File(path), Charsets.UTF_8);
 		} catch (IOException e) {
-			LOG.error("Could not get list of web sites");
+			LOG.error("Could not get list of web sites",e);
 		}
 		return readLines.toArray(new String[readLines.size()]);
-
 	}
 }

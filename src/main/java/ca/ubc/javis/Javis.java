@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.XMLFormatter;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.Charsets;
 import org.w3c.dom.Node;
@@ -88,11 +89,11 @@ public class Javis implements PostCrawlingPlugin {
 		        + " Visible Edges: " + sfgInformation.getVisibleEdge() + " Invisible Edges: " + sfgInformation.getInvisibleEdge()
 		        + "\n-------------Edges---------" + "\nVisible Edges are:\n");
 		int i;
-		for (i = 0; i < sfgInformation.getVisibleEdge(); i++) {
+		for (i = 0; i < sfgInformation.getVisibleEdge().get(); i++) {
 			myLogger.log(Level.ALL, visiblearray.get(i));
 		}
 		myLogger.log(Level.ALL, "---------------\n Invisible Edges are:");
-		for (i = 0; i < sfgInformation.getInvisibleEdge(); i++) {
+		for (i = 0; i < sfgInformation.getInvisibleEdge().get(); i++) {
 			myLogger.log(Level.ALL, invisiblearray.get(i));
 		}
 		myFileHandler.flush();
@@ -118,8 +119,21 @@ public class Javis implements PostCrawlingPlugin {
 		totalDomDifferenceSize =
 		        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
 		                + "//TotalChangeResultLog.txt");
-		printResults(totalDomDifferenceSize, session);
+		int contentSize = extractContents(domDifference);
+		printResults(totalDomDifferenceSize, contentSize, session);
+	}
 
+	private int extractContents(File domDifference) {
+		int size = 0;
+		try {
+			String domString = Files.readLines(domDifference, Charsets.UTF_8).toString();
+			ContentExtraction newContent = new ContentExtraction();
+			newContent.getTagValues(domString);
+			size = getDomDifferenceByteSize(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalContent.txt");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return size;
 	}
 
 	public void stateCategorization(Set<Eventable> event) {
@@ -145,15 +159,15 @@ public class Javis implements PostCrawlingPlugin {
 					}
 					if (anchorVisible || imgVisible) {
 						visibleEdge = true;
-						stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
-						sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
+						stateCondition.add((sfgInformation.getInputCounter().get() + sfgInformation.getVisibleState().get()), "visible");
+						sfgInformation.getVisibleState().getAndIncrement();
 						break;
 					}
 				}
 			}
 			if (!visibleEdge) {
-				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "invisible");
-				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "invisible");
+				sfgInformation.getInvisibleState().getAndIncrement();
 			}
 			java.util.Iterator<Eventable> edg1 = event.iterator();
 
@@ -169,27 +183,27 @@ public class Javis implements PostCrawlingPlugin {
 			edge = edg1.next();
 			if (isRelevantTag(edge)) {
 				getEdgeInfo(edge);
-				invisiblearray.add((sfgInformation.getInvisibleEdge()), edge.toString());
-				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+				invisiblearray.add((sfgInformation.getInvisibleEdge().get()), edge.toString());
+				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
 			if (edge.getElement().getTag().equalsIgnoreCase("a")) {
 				if (anchorVisible) {
-					visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
-					sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
+					visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
+					sfgInformation.getVisibleEdge().getAndIncrement();
 				} else {
-					invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
-					sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+					invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
+					sfgInformation.getInvisibleEdge().getAndIncrement();
 				}
 			}
 			if (edge.getElement().getTag().toLowerCase().equalsIgnoreCase("img")) {
 				node = edge.getElement().getNode().getParentNode();
 				imgVisible = imgChecker(node, edge);
 				if (imgVisible) {
-					visiblearray.add(sfgInformation.getVisibleEdge(),edge.toString());
-					sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
+					visiblearray.add(sfgInformation.getVisibleEdge().get(),edge.toString());
+					sfgInformation.getVisibleEdge().getAndIncrement();
 				} else {
-					invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
-					sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+					invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
+					sfgInformation.getInvisibleEdge().getAndIncrement();
 				}
 			}
 		}
@@ -202,38 +216,38 @@ public class Javis implements PostCrawlingPlugin {
 		Eventable edge;
 		edge = edg.next();
 		if (isRelevantTag(edge)) {
-			invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
-			stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "invisible");
-			sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
-			sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+			invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
+			stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "invisible");
+			sfgInformation.getInvisibleState().getAndIncrement();
+			sfgInformation.getInvisibleEdge().getAndIncrement();
 			getEdgeInfo(edge);
 		} else if (edge.getElement().getTag().equalsIgnoreCase("a")) {
 			anchorVisible = anchorVisibilityChecking(edge);
 			if (anchorVisible) {
-				visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
-				sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
-				sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
+				visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "visible");
+				sfgInformation.getVisibleState().getAndIncrement();
+				sfgInformation.getVisibleEdge().getAndIncrement();
 			} else {
-				invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()),"invisible");
-				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
-				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+				invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()),"invisible");
+				sfgInformation.getInvisibleState().getAndIncrement();
+				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
 
 		} else if (edge.getElement().getTag().toLowerCase().equalsIgnoreCase("img")) {
 			node = edge.getElement().getNode().getParentNode();
 			imgVisible = imgChecker(node, edge);
 			if (imgVisible) {
-				visiblearray.add(sfgInformation.getVisibleEdge(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()), "visible");
-				sfgInformation.setVisibleState(sfgInformation.getVisibleState() + 1);
-				sfgInformation.setVisibleEdge(sfgInformation.getVisibleEdge() + 1);
+				visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "visible");
+				sfgInformation.getVisibleState().getAndIncrement();
+				sfgInformation.getVisibleEdge().getAndIncrement();
 			} else {
-				invisiblearray.add(sfgInformation.getInvisibleEdge(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState() + sfgInformation.getVisibleState()),"invisible");
-				sfgInformation.setInvisibleState(sfgInformation.getInvisibleState() + 1);
-				sfgInformation.setInvisibleEdge(sfgInformation.getInvisibleEdge() + 1);
+				invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()),"invisible");
+				sfgInformation.getInvisibleState().getAndIncrement();
+				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
 		}
 	}
@@ -266,11 +280,11 @@ public class Javis implements PostCrawlingPlugin {
 				else
 					URLFlag = true;
 				if (URLFlag) {
-					sfgInformation.setAVisCounter(sfgInformation.getAVisCounter()+1);
+					sfgInformation.getAVisCounter().getAndIncrement();
 					visible = true;
 				} else {
 					visible = false;
-					sfgInformation.setAInvisCounter(sfgInformation.getAInvisCounter()+1);
+					sfgInformation.getAInvisCounter().getAndIncrement();
 				}
 			}
 		}
@@ -279,13 +293,13 @@ public class Javis implements PostCrawlingPlugin {
 
 	public void getEdgeInfo(Eventable edge) {
 		if (edge.getElement().getTag().equals("DIV"))
-			sfgInformation.setDivCounter(sfgInformation.getDivCounter()+1);
+			sfgInformation.getDivCounter().getAndIncrement();
 		else if (edge.getElement().getTag().equals("SPAN"))
-			sfgInformation.setSpanCounter(sfgInformation.getSpanCounter()+1);
+			sfgInformation.getSpanCounter().getAndIncrement();
 		else if (edge.getElement().getTag().equals("INPUT"))
-			sfgInformation.setInputCounter(sfgInformation.getInputCounter());
+			sfgInformation.getInputCounter().getAndIncrement();
 		else if (edge.getElement().getTag().equals("BUTTON"))
-			sfgInformation.setButtonCounter(sfgInformation.getButtonCounter()+1);
+			sfgInformation.getButtonCounter().getAndIncrement();
 	}
 
 	public static boolean hrefInvisible(String str) {
@@ -319,14 +333,14 @@ public class Javis implements PostCrawlingPlugin {
 					Element e = new Element(node);
 					String imgHrefValue = getElementAttributes(e);
 					if (hrefInvisible(imgHrefValue)) {
-						sfgInformation.setImgInisCounter(sfgInformation.getImgInvisCounter()+1);
+						sfgInformation.getImgInvisCounter().getAndIncrement();
 					} else {
 						visible = true;
-						sfgInformation.setImgVisCounter(sfgInformation.getImgVisCounter()+1);
+						sfgInformation.getImgVisCounter().getAndIncrement();
 					}
 				}
 			} else {
-				sfgInformation.setImgInisCounter(sfgInformation.getImgInvisCounter());
+				sfgInformation.getImgInvisCounter().getAndIncrement();
 			}
 		return visible;
 	}
@@ -364,7 +378,7 @@ public class Javis implements PostCrawlingPlugin {
 		return size;
 	}
 
-	public void printResults(int size, CrawlSession session){
+	public void printResults(int size, int contentSize ,CrawlSession session){
 		
 		long timing = System.currentTimeMillis() - CrawljaxRunner.startTime;
 		String result = ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
@@ -373,12 +387,15 @@ public class Javis implements PostCrawlingPlugin {
 			        + sfgInformation.getVisibleState() + "\nInvisible States: " + sfgInformation.getInvisibleState()
 			        + "\nVisible Edges: " + sfgInformation.getVisibleEdge() + "\nInvisible Edges: " + sfgInformation.getInvisibleEdge()
 			        + "\nTotalDomDifferenceSize (Bytes): " + size
-			        + "\nTotalDomDifferenceSize (KBytes): " + (size / 1024)
+			        + "\nTotalDomDifferenceSize (KB): " + (size / 1024)
+			        + "\nTotalContent (Bytes): "+ contentSize
+			        + "\nTotalContent (KB) : " + (contentSize/1024)
+			        + "\nElapsed Time (milliseconds): " + timing
 			        + "\n--------Clickables---------" + "\nA Visible: " + sfgInformation.getAVisCounter()
 			        + "\nA Invisible: " + sfgInformation.getAInvisCounter() + "\nDiv: " + sfgInformation.getDivCounter() + "\nSpan: "
 			        + sfgInformation.getSpanCounter() + "\nImg Visible: " + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
 			        + sfgInformation.getImgInvisCounter() + "\nInput: " + sfgInformation.getInputCounter() + "\nButton: "
-			        + sfgInformation.getButtonCounter() + "\nElapsed Time (milliseconds): " + timing);
+			        + sfgInformation.getButtonCounter());
 				try {
 					Files.write(result, new File(CrawljaxRunner.path + CrawljaxRunner.counter+ "//FinalResults.txt"), Charsets.UTF_8);
 				} catch (IOException e) {

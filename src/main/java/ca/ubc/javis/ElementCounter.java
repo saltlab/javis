@@ -1,5 +1,8 @@
 package ca.ubc.javis;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.crawljax.core.CandidateElement;
 
 public class ElementCounter {
 
@@ -10,51 +13,72 @@ public class ElementCounter {
 	private final static AtomicInteger button = new AtomicInteger();
 	private final static AtomicInteger input = new AtomicInteger();
 
-	public void incrementAnchors() {
+	public static void incrementAnchors() {
 		anchors.incrementAndGet();
 	}
 	
-	public void incrementDivs() {
+	public static void incrementDivs() {
 		div.incrementAndGet();
 	}
 	
-	public void incrementSpans() {
+	public static void incrementSpans() {
 		span.incrementAndGet();
 	}
 	
-	public void incrementImages() {
+	public static void incrementImages() {
 		img.incrementAndGet();
 	}
 	
-	public void incrementButton() {
+	public static void incrementButton() {
 		button.incrementAndGet();
 	}
 	
-	public void incrementInputs() {
+	public static void incrementInputs() {
 		input.incrementAndGet();
 	}
 	
-	public static AtomicInteger getAnchors(){
-		return anchors;
+	public static int getAnchors(){
+		return anchors.get();
 	}
 	
-	public static AtomicInteger getDivs(){
-		return div;
+	public static int getDivs(){
+		return div.get();
 	}
 	
-	public static AtomicInteger getSpans(){
-		return span;
+	public static int getSpans(){
+		return span.get();
 	}
 	
-	public static AtomicInteger getImages(){
-		return img;
+	public static int getImages(){
+		return img.get();
 	}
 	
-	public static AtomicInteger getButtons(){
-		return button;
+	public static int getButtons(){
+		return button.get();
 	}
 	
-	public static AtomicInteger getInputs(){
-		return input;
+	public static int getInputs(){
+		return input.get();
+	}
+
+	public void sortCandidateElements(List<CandidateElement> candidateElements) {
+		for (CandidateElement candidateElement : candidateElements){
+			if(candidateElement!=null)
+			{
+			if(candidateElement.getElement().getTagName()
+			        .equalsIgnoreCase("A"))
+				incrementAnchors();
+			else if(candidateElement.getElement().getTagName().equalsIgnoreCase("DIV"))
+				incrementDivs();
+			else if(candidateElement.getElement().getTagName().equalsIgnoreCase("SPAN"))
+				incrementSpans();
+			else if(candidateElement.getElement().getTagName().equalsIgnoreCase("IMG"))
+				incrementImages();
+			else if(candidateElement.getElement().getTagName().equalsIgnoreCase("BUTTON"))
+				incrementButton();
+			else if(candidateElement.getElement().getTagName().equalsIgnoreCase("INPUT"))
+				incrementInputs();
+			}
+		}
 	}
 }

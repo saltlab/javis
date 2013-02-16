@@ -83,8 +83,8 @@ public class TestingJavis {
 
 	@Test
 	public void testStateCategorization_OneClickable_Visbile() throws SAXException, IOException {
-		Javis.sfgInformation.setVisibleState(0);
-		Javis.sfgInformation.setVisibleEdge(0);
+		Javis.sfgInformation.getVisibleState().set(0);
+		Javis.sfgInformation.getVisibleEdge().set(0);
 		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
 		StateVertex state2 =
 		        new StateVertex("STATE_TWO", "<table><a id='achr'>state2</a></table>");
@@ -142,8 +142,8 @@ public class TestingJavis {
 
 	@Test
 	public void testStateCategorization_TwoClickables_Visible() throws SAXException, IOException {
-		Javis.sfgInformation.setVisibleState(0);
-		Javis.sfgInformation.setVisibleEdge(0);
+		Javis.sfgInformation.getVisibleState().set(0);
+		Javis.sfgInformation.getVisibleEdge().set(0);
 		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
 		StateVertex state2 = new StateVertex("STATE_TWO", "<table><a>state2</a></table>");
 		StateVertex state3 = new StateVertex("STATE_THREE", "<table><div>state3</div></table>");
@@ -179,8 +179,8 @@ public class TestingJavis {
 	@Test
 	public void testStateCategorization_TwoClickables_Invisible() throws SAXException,
 	        IOException {
-		Javis.sfgInformation.setInvisibleState(0);
-		Javis.sfgInformation.setInvisibleEdge(0);
+		Javis.sfgInformation.getInvisibleState().set(0);
+		Javis.sfgInformation.getInvisibleEdge().set(0);
 		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
 		StateVertex state2 =
 		        new StateVertex("STATE_TWO", "<table><a id='achr'>state2</a></table>");
@@ -216,10 +216,10 @@ public class TestingJavis {
 	@Test
 	public void testStateCategorization_TwoClickables_Invisible_VS_Visible() throws SAXException,
 	        IOException {
-		Javis.sfgInformation.setInvisibleEdge(0);
-		Javis.sfgInformation.setVisibleEdge(0);
-		Javis.sfgInformation.setInvisibleState(0);
-		Javis.sfgInformation.setVisibleState(0);
+		Javis.sfgInformation.getInvisibleEdge().set(0);
+		Javis.sfgInformation.getVisibleEdge().set(0);
+		Javis.sfgInformation.getInvisibleState().set(0);
+		Javis.sfgInformation.getVisibleState().set(0);
 		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
 		StateVertex state2 =
 		        new StateVertex("STATE_TWO", "<table><a id='achr'>state2</a></table>");

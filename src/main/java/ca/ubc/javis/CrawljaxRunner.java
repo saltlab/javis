@@ -98,8 +98,8 @@ public class CrawljaxRunner {
 			second = URLstring.indexOf(".ru");
 		else
 			second = URLstring.indexOf(".com");
-		resticting = initialization.substring(first + 1, second - 1);
-		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
+	//	resticting = initialization.substring(first + 1, second - 1);
+	//	crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
 
 		return crawler;
 		
@@ -137,7 +137,7 @@ public class CrawljaxRunner {
 				File file = new File(path + i);
 				file.mkdir();
 				clearProperties();
-
+				urlArray[i] = "http://ece.ubc.ca/~janab/";
 				counter = i;
 
 				System.setProperty("webdriver.firefox.bin",
@@ -170,18 +170,18 @@ public class CrawljaxRunner {
 	}
 
 	private static void clearProperties() {
-		Javis.sfgInformation.setVisibleEdge(0);
-		Javis.sfgInformation.setInvisibleEdge(0);
-		Javis.sfgInformation.setInvisibleState(0);
-		Javis.sfgInformation.setVisibleState(0);
-		Javis.sfgInformation.setDivCounter(0);
-		Javis.sfgInformation.setAInvisCounter(0);
-		Javis.sfgInformation.setAVisCounter(0);
-		Javis.sfgInformation.setButtonCounter(0);
-		Javis.sfgInformation.setImgVisCounter(0);
-		Javis.sfgInformation.setInputCounter(0);
-		Javis.sfgInformation.setSpanCounter(0);
-		Javis.sfgInformation.setImgInisCounter(0);
+		Javis.sfgInformation.getVisibleEdge().set(0);
+		Javis.sfgInformation.getInvisibleEdge().set(0);
+		Javis.sfgInformation.getInvisibleState().set(0);
+		Javis.sfgInformation.getVisibleState().set(0);
+		Javis.sfgInformation.getDivCounter().set(0);
+		Javis.sfgInformation.getAInvisCounter().set(0);
+		Javis.sfgInformation.getAVisCounter().set(0);
+		Javis.sfgInformation.getButtonCounter().set(0);
+		Javis.sfgInformation.getImgVisCounter().set(0);
+		Javis.sfgInformation.getInputCounter().set(0);
+		Javis.sfgInformation.getSpanCounter().set(0);
+		Javis.sfgInformation.getImgInvisCounter().set(0);
 		Javis.visiblearray.clear();
 		Javis.invisiblearray.clear();
 		Javis.stateCondition.clear();

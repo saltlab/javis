@@ -24,7 +24,7 @@ public class getDomDifferences {
 			        + "//firstDom.txt"), Charsets.UTF_8);
 			Files.write(next, new File(CrawljaxRunner.path+ CrawljaxRunner.counter+"//secondDom.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
-			LOG.error("Cannot write to file(s).");
+			LOG.error("Cannot write to file(s). Reason: ",e);
 		}
 
 		String result =
@@ -45,7 +45,7 @@ public class getDomDifferences {
 	                + "//individualChangeResultLog" + id + ".txt"), Charsets.UTF_8);
 			
 		} catch (IOException e) {
-			LOG.error("Cannot write to file(s).");
+			LOG.error("Cannot write to file(s). Reason: ",e);
 		}
 
 	}

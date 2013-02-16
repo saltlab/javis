@@ -18,37 +18,28 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 	private static final Logger LOG = LoggerFactory.getLogger(GetCandidateElements.class);
 	public static final ElementCounter COUNTER = new ElementCounter();
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void preStateCrawling(CrawlSession session, List<CandidateElement> candidateElements) {
 
 		String filename =
 		        CrawljaxRunner.path + CrawljaxRunner.counter + "//CandidateElementCounter.txt";
+		String result;
 		try {
-			for (CandidateElement candidateElement : candidateElements){
-					if(candidateElement.getElement().getTagName()
-					        .equalsIgnoreCase("A"))
-						COUNTER.incrementAnchors();
-					else if(candidateElement.getElement().getTagName().equalsIgnoreCase("DIV"))
-						COUNTER.incrementDivs();
-					else if(candidateElement.getElement().getTagName().equalsIgnoreCase("SPAN"))
-						COUNTER.incrementSpans();
-					else if(candidateElement.getElement().getTagName().equalsIgnoreCase("IMG"))
-						COUNTER.incrementImages();
-					else if(candidateElement.getElement().getTagName().equalsIgnoreCase("BUTTON"))
-						COUNTER.incrementButton();
-					else if(candidateElement.getElement().getTagName().equalsIgnoreCase("INPUT"))
-						COUNTER.incrementInputs();
-				}
-			String result = ("-----------------------------------\n" + "A candidate Elements: "
+			COUNTER.sortCandidateElements(candidateElements);
+			if((COUNTER.getAnchors() != 0) || (COUNTER.getButtons() != 0)||(COUNTER.getDivs() != 0)||(COUNTER.getImages() != 0)||
+					(COUNTER.getInputs()!= 0)|| (COUNTER.getSpans() != 0)){
+			result = ("-----------------------------------\n" + "A candidate Elements: "
 			        + ElementCounter.getAnchors()
-			        + "\nDiv candidate Elements: " + ElementCounter.getDivs()
-			        + "\nSpan candidate Elements: " + ElementCounter.getSpans()
-			        + "\nImg candidate Elements: " + ElementCounter.getImages()
-			        + "\nInput candidate Elements: " + ElementCounter.getInputs()
-			        + "\nButton candidate Elements: " + ElementCounter.getButtons() + "\n");
+			        + "\nDiv candidate Elements: " + COUNTER.getDivs()
+			        + "\nSpan candidate Elements: " + COUNTER.getSpans()
+			        + "\nImg candidate Elements: " + COUNTER.getImages()
+			        + "\nInput candidate Elements: " + COUNTER.getInputs()
+			        + "\nButton candidate Elements: " + COUNTER.getButtons() + "\n");
 			Files.write(result, new File(filename), Charsets.UTF_8);
+			}
 		} catch (IOException e) {
-			LOG.error("I couldnt run prestate crawling on " + filename);
+			LOG.error("I couldnt run prestate crawling on " + filename + " "+ e);
 		}
 
 	}

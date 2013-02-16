@@ -1,114 +1,82 @@
 package ca.ubc.javis;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class StateFlowGraphInformation {
 
-	private static int invisibleState;
-	private static int visibleState;
-	private static int invisibleEdge;
-	private static int visibleEdge;
-	private static int divCounter;
-	private static int spanCounter;
-	private static int inputCounter;
-	private static int buttonCounter;
-	private static int avisibleCounter;
-	private static int ainvisibleCounter;
-	private static int imgvisibleCounter;
-	private static int imginvisibleCounter;
+	private static AtomicInteger invisibleState = new AtomicInteger();
+	private static AtomicInteger visibleState = new AtomicInteger();
+	private static AtomicInteger invisibleEdge = new AtomicInteger();
+	private static AtomicInteger visibleEdge = new AtomicInteger();
+	private static AtomicInteger divCounter = new AtomicInteger();
+	private static AtomicInteger spanCounter = new AtomicInteger();
+	private static AtomicInteger inputCounter = new AtomicInteger();
+	private static AtomicInteger buttonCounter = new AtomicInteger();
+	private static AtomicInteger avisibleCounter = new AtomicInteger();
+	private static AtomicInteger ainvisibleCounter = new AtomicInteger();
+	private static AtomicInteger imgvisibleCounter = new AtomicInteger();
+	private static AtomicInteger imginvisibleCounter = new AtomicInteger();
 
-	public void setVisibleState(int visibleStates) {
-		visibleState = visibleStates;
-	}
-
-	public int getVisibleState() {
+	public AtomicInteger getVisibleState() {
 		return visibleState;
 	}
 
-	public void setDivCounter(int div) {
-		divCounter = div;
-	}
-
-	public int getDivCounter() {
+	/*public void setVisibleState(AtomicInteger visibleStates) {
+		visibleState = visibleStates;
+	}*/
+	public AtomicInteger getDivCounter() {
 		return divCounter;
 	}
 
-	public void setSpanCounter(int span) {
-		spanCounter = span;
+
+	public AtomicInteger getSpanCounter() {
+		return spanCounter ;
 	}
 
-	public int getSpanCounter() {
-		return spanCounter;
+
+	public AtomicInteger getInputCounter() {
+		return inputCounter ;
 	}
 
-	public void setInputCounter(int input) {
-		inputCounter = input;
+	public AtomicInteger getButtonCounter() {
+		return buttonCounter ;
 	}
 
-	public int getInputCounter() {
-		return inputCounter;
+
+	public AtomicInteger getAVisCounter() {
+		return avisibleCounter ;
 	}
 
-	public void setButtonCounter(int button) {
-		buttonCounter = button;
+
+	public AtomicInteger getAInvisCounter() {
+		return ainvisibleCounter ;
 	}
 
-	public int getButtonCounter() {
-		return buttonCounter;
+	public AtomicInteger getImgVisCounter() {
+		return imgvisibleCounter ;
 	}
 
-	public void setAVisCounter(int avis) {
-		avisibleCounter = avis;
+
+	public AtomicInteger getImgInvisCounter() {
+		return imginvisibleCounter ;
 	}
 
-	public int getAVisCounter() {
-		return avisibleCounter;
+	public AtomicInteger getInvisibleState() {
+		return invisibleState ;
 	}
 
-	public void setAInvisCounter(int ainvis) {
-		ainvisibleCounter = ainvis;
+
+	public AtomicInteger getVisibleEdge() {
+		return visibleEdge ;
 	}
 
-	public int getAInvisCounter() {
-		return ainvisibleCounter;
-	}
+	/*public void setVisibleEdge(int visibleEdges) {
+		visibleEdge.set(visibleEdges);
+	}*/
 
-	public void setImgVisCounter(int imgvis) {
-		imgvisibleCounter = imgvis;
-	}
-
-	public int getImgVisCounter() {
-		return imgvisibleCounter;
-	}
-
-	public void setImgInisCounter(int imginvis) {
-		imginvisibleCounter = imginvis;
-	}
-
-	public int getImgInvisCounter() {
-		return imginvisibleCounter;
-	}
-
-	public void setInvisibleState(int invisibleStates) {
-		invisibleState = invisibleStates;
-	}
-
-	public int getInvisibleState() {
-		return invisibleState;
-	}
-
-	public void setVisibleEdge(int visibleEdges) {
-		visibleEdge = visibleEdges;
-	}
-
-	public int getVisibleEdge() {
-		return visibleEdge;
-	}
-
-	public void setInvisibleEdge(int invisibleEdges) {
-		invisibleEdge = invisibleEdges;
-	}
-
-	public int getInvisibleEdge() {
-		return invisibleEdge;
+	public AtomicInteger getInvisibleEdge() {
+		return invisibleEdge ;
 	}
 
 }
