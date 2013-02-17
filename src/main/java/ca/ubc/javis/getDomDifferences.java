@@ -20,17 +20,15 @@ public class getDomDifferences {
 	        throws IOException, InterruptedException {
 
 		try {
-			Files.write(previous, new File(CrawljaxRunner.path + CrawljaxRunner.counter
-			        + "//firstDom.txt"), Charsets.UTF_8);
-			Files.write(next, new File(CrawljaxRunner.path+ CrawljaxRunner.counter+"//secondDom.txt"), Charsets.UTF_8);
+			Files.write(previous, new File(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//firstDom.txt"), Charsets.UTF_8);
+			Files.write(next, new File(CrawljaxRunner.path+ CrawljaxRunner.counter+CrawljaxRunner.name+"//secondDom.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
 			LOG.error("Cannot write to file(s). Reason: ",e);
 		}
 
 		String result =
-		        TargetedDiff.getTargetDiff(CrawljaxRunner.path + CrawljaxRunner.counter
-		                + "//firstDom.txt", CrawljaxRunner.path + CrawljaxRunner.counter
-		                + "//secondDom.txt");
+		        TargetedDiff.getTargetDiff(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//firstDom.txt",
+		        		CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//secondDom.txt");
 		buffer.append(result);
 		printResult(result, buffer.toString().trim(), id);
 
@@ -40,9 +38,8 @@ public class getDomDifferences {
 	        IOException {
 		
 		try {
-			Files.write(str2, new File(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalChangeResultLog.txt"), Charsets.UTF_8);
-			Files.write(str1, new File(CrawljaxRunner.path + CrawljaxRunner.counter
-	                + "//individualChangeResultLog" + id + ".txt"), Charsets.UTF_8);
+			Files.write(str2, new File(CrawljaxRunner.path+CrawljaxRunner.counter+CrawljaxRunner.name+"//TotalChangeResultLog.txt"), Charsets.UTF_8);
+			Files.write(str1, new File(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//individualChangeResultLog" + id + ".txt"), Charsets.UTF_8);
 			
 		} catch (IOException e) {
 			LOG.error("Cannot write to file(s). Reason: ",e);

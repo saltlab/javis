@@ -35,6 +35,7 @@ public class CrawljaxRunner {
 	public static String path = "//ubc//ece//home//am//grads//janab//JavisResults//";
 	public static String javaPath = "//ubc//ece//home//am//grads//janab//Github//javis//";
 	public static long startTime;
+	public static String name;
 
 	private static void GetTrace(Exception e) {
 		StackTraceElement elements[] = e.getStackTrace();
@@ -88,18 +89,8 @@ public class CrawljaxRunner {
 		crawler.setMaximumRuntime(10800);
 
 		crawler.setInputSpecification(getInputSpecification());
-		String initialization = "", resticting = "";
-		int first = 0, second = 0;
-		initialization = URLstring;
-		first = initialization.indexOf(".");
-		if (initialization.contains("org"))
-			second = initialization.indexOf("org");
-		else if (initialization.contains(".ru"))
-			second = URLstring.indexOf(".ru");
-		else
-			second = URLstring.indexOf(".com");
-	//	resticting = initialization.substring(first + 1, second - 1);
-	//	crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(resticting));
+		String urlName = name.substring(1, name.length());
+		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(urlName));
 
 		return crawler;
 		
@@ -133,25 +124,18 @@ public class CrawljaxRunner {
 		        GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt", 400);
 		for (int i = 20; i < 21; i++) {
 			try {
+				urlArray[i]= "http://www.google.ca";
+				getName(urlArray[i]);
 				startTime = System.currentTimeMillis();
-				File file = new File(path + i+"-"+urlArray[i]);
+				File file = new File(path +i+name);
 				file.mkdir();
 				clearProperties();
-				urlArray[i] = "http://ece.ubc.ca/~janab/";
 				counter = i;
-
-				System.setProperty("webdriver.firefox.bin",
-				        "//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox");
+				System.setProperty("webdriver.firefox.bin","//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox");
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
-
-				System.out.println("success 1");
-
 				crawljax.run();
-				System.out.println("success 2");
-
 				File logFile = new File(javaPath + "log4j.log");
-				logFile.renameTo(new File(path + i + "//log4j.log"));
-
+				logFile.renameTo(new File(path +i+name+ "//log4j.log"));
 			} catch (CrawljaxException e) {
 
 				ERROR_LOGGER.warn(e.toString());
@@ -162,11 +146,26 @@ public class CrawljaxRunner {
 				GetTrace(e);
 			}
 
-			System.out.println("end of loop: " + (1));
-			System.out.println("success 3");
-
 		}
 
+	}
+
+	private static void getName(String URLstring) {
+		String initialization = "", resticting = "";
+		int first = 0, second = 0;
+		initialization = URLstring;
+		first = initialization.indexOf(".");
+		if (initialization.contains("org"))
+			second = initialization.indexOf("org");
+		else if (initialization.contains(".ru"))
+			second = URLstring.indexOf(".ru");
+		else if (initialization.contains(".ca"))
+			second = URLstring.indexOf(".ca");
+		else
+			second = URLstring.indexOf(".com");
+		resticting = initialization.substring(first + 1, second);
+		name = "-".concat(resticting);
+		
 	}
 
 	private static void clearProperties() {

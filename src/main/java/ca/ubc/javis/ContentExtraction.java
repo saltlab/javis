@@ -26,7 +26,7 @@ public class ContentExtraction {
 	        tagValues.add(matcher.group(1));
 	    }
 	    try {
-			Files.write(tagValues.toString(),new File(CrawljaxRunner.path+CrawljaxRunner.counter+"//TotalContent.txt"), Charsets.UTF_8);
+			Files.write(tagValues.toString(),new File(CrawljaxRunner.path+CrawljaxRunner.counter+CrawljaxRunner.name+"//TotalContent.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
 			LOG.error("Cannot write to file",e);
 		}

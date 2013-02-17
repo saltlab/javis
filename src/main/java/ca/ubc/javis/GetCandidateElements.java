@@ -23,7 +23,7 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 	public void preStateCrawling(CrawlSession session, List<CandidateElement> candidateElements) {
 
 		String filename =
-		        CrawljaxRunner.path + CrawljaxRunner.counter + "//CandidateElementCounter.txt";
+		        CrawljaxRunner.path + CrawljaxRunner.counter +CrawljaxRunner.name+ "//CandidateElementCounter.txt";
 		String result;
 		try {
 			COUNTER.sortCandidateElements(candidateElements);

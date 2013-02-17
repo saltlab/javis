@@ -21,10 +21,6 @@ public class StateFlowGraphInformation {
 	public AtomicInteger getVisibleState() {
 		return visibleState;
 	}
-
-	/*public void setVisibleState(AtomicInteger visibleStates) {
-		visibleState = visibleStates;
-	}*/
 	public AtomicInteger getDivCounter() {
 		return divCounter;
 	}
@@ -70,10 +66,6 @@ public class StateFlowGraphInformation {
 	public AtomicInteger getVisibleEdge() {
 		return visibleEdge ;
 	}
-
-	/*public void setVisibleEdge(int visibleEdges) {
-		visibleEdge.set(visibleEdges);
-	}*/
 
 	public AtomicInteger getInvisibleEdge() {
 		return invisibleEdge ;
