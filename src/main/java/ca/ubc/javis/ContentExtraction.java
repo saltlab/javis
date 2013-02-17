@@ -18,10 +18,10 @@ import com.google.common.io.Files;
 public class ContentExtraction {
 	private static final Pattern TAG_REGEX = Pattern.compile("<.+?>(.+?)</.+?>");
 	public static Logger LOG = LoggerFactory.getLogger(ContentExtraction.class);
-	
+
 	public void getTagValues(final String str) {
 	    final List<String> tagValues = new ArrayList<String>();
-	    final Matcher matcher = TAG_REGEX.matcher(str);
+	    final Matcher matcher = TAG_REGEX.matcher(str.trim());
 	    while (matcher.find()) {
 	        tagValues.add(matcher.group(1));
 	    }

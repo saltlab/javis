@@ -1,0 +1,29 @@
+1c1,4
+---
+> <!--
+> Content-type: Preventing MHTML XSS in IE.
+> 
+> --><HTML xmlns="http://www.w3.org/1999/xhtml">
+4,9c7,12
+---
+> <SCRIPT async="" src="https://apis.google.com/_/abc-static/_/js/gapi/card/rt=j/ver=GyFIWT38BxQ.en./sv=1/am=%211SHbgmtzBX7JmrjUxw/d=1/ed=1/exm=plusone/cb=gapi.loaded_1"></SCRIPT><SCRIPT async="" src="https://apis.google.com/_/abc-static/_/js/gapi/plusone/rt=j/ver=GyFIWT38BxQ.en./sv=1/am=%211SHbgmtzBX7JmrjUxw/d=1/cb=gapi.loaded_0"></SCRIPT><SCRIPT async="" src="https://ssl.google-analytics.com/ga.js" type="text/javascript"></SCRIPT><SCRIPT type="text/javascript">(function(){function d(a){this.t={};this.tick=function(a,c,b){b=void 0!=b?b:(new Date).getTime();this.t[a]=[b,c]};this.tick("start",null,a)}var a=new d;window.jstiming={Timer:d,load:a};if(window.performance&amp;&amp;window.performance.timing){var a=window.performance.timing,c=window.jstiming.load,b=a.navigationStart,a=a.responseStart;0&lt;b&amp;&amp;a&gt;=b&amp;&amp;(c.tick("_wtsrt",void 0,b),c.tick("wtsrt_","_wtsrt",a),c.tick("tbsd_","wtsrt_"))}try{a=null,window.chrome&amp;&amp;window.chrome.csi&amp;&amp;(a=Math.floor(window.chrome.csi().pageT),
+> c&amp;&amp;0&lt;b&amp;&amp;(c.tick("_tbnd",void 0,window.chrome.csi().startE),c.tick("tbnd_","_tbnd",b))),null==a&amp;&amp;window.gtbExternal&amp;&amp;(a=window.gtbExternal.pageT()),null==a&amp;&amp;window.external&amp;&amp;(a=window.external.pageT,c&amp;&amp;0&lt;b&amp;&amp;(c.tick("_tbnd",void 0,window.external.startE),c.tick("tbnd_","_tbnd",b))),a&amp;&amp;(window.jstiming.pt=a)}catch(e){}})();
+> </SCRIPT>
+> 
+> <TITLE>Google Play</TITLE>
+> <LINK href="/static/client/css/3889619500-play_css_ltr.css" rel="stylesheet">
+11,21c14,17
+---
+
+> p("pca",$a);p("paa",ab);p("ddld",Qa);p("ddrd",ib);p("dderr",hb);p("rtl",Oa);p("bh",O);p("abh",bb);p("dh",P);p("adh",cb);p("ch",Q);p("ach",eb);p("eh",Na);p("aeh",db);ba=o.a("")?Ia:Ja;p("qs",ba);p("setContinueCb",Ga);p("pc",Ha);p("bsy",kb);o.d=Ra;o.j=jb;var lb={};x.base=lb;z.push(["m",{url:"//ssl.gstatic.com/gb/js/sem_32b2c293468548683a6cf3ccc2a4dd07.js"}]);m.sg={c:""};p("wg",{rg:{}});var mb={tiw:o.c("15000",0),tie:o.c("30000",0)};x.wg=mb;var nb={thi:o.c("10000",0),thp:o.c("180000",0),tho:o.c("5000",0),tet:o.b("0.5",0)};x.wm=nb;if(o.a("1")){var ob=o.a("");z.push(["gc",{auto:ob,url:"//ssl.gstatic.com/gb/js/abc/gci_91f30755d6a6b787dcc2a4062e6e9824.js",libs:"googleapis.client:plusone"}]);var pb={version:"gci_91f30755d6a6b787dcc2a4062e6e9824.js",index:"",lang:"en"};x.gc=pb;var qb=function(a){window.googleapis&amp;&amp;window.iframes?a&amp;&amp;a():(a&amp;&amp;oa(a),I("gc"))};p("lGC",qb);o.a("1")&amp;&amp;p("lPWF",qb)};window.__PVT="";if(o.a("1")&amp;&amp;o.a("1")){var rb=function(a){qb(function(){B("pw",a);I("pw")})};p("lPW",rb);z.push(["pw",{url:"//ssl.gstatic.com/gb/js/abc/pwm_45f73e4df07a0e388b0fa1f3d30e7280.js"}]);var sb=[],tb=function(a){sb[0]=a},ub=function(a,b){var c=b||{};c._sn="pw";s(a,c)},vb={signed:sb,elog:ub,base:"https://plusone.google.com/u/0",loadTime:(new Date).getTime()};x.pw=vb;var wb=function(a,b){for(var c=b.split("."),d=function(){var b=arguments;a(function(){for(var a=m,d=0,f=c.length-1;d&lt;f;++d)a=a[c[d]];a[c[d]].apply(a,b)})},g=m,f=0,j=c.length-1;f&lt;
+> j;++f)g=g[c[f]]=g[c[f]]||{};return g[c[f]]=d};wb(rb,"pw.clk");wb(rb,"pw.hvr");p("su",tb,m.pw)};var xb=[1,2,3,4,5,6,9,10,11,13,14,28,29,30,34,35,37,38,39,40,41,42,43,500];var yb=o.b("0.01",1E-4),zb=o.b("0.1",1),Ab=i,Bb=i;if(o.a("1")){var Cb=Math.random();Cb&lt;=yb&amp;&amp;(Ab=e);Cb&lt;=zb&amp;&amp;(Bb=e)}var W=h;
+> function Db(a,b){var c=yb,d=Ab,g;g=a;if(!W){W={};for(var f=0;f&lt;xb.length;f++){var j=xb[f];W[j]=e}}if(g=!!W[g])c=zb,d=Bb;if(d){var d=encodeURIComponent,k="es_plusone_gc_20130124.0_p0",l;m.rp?(l=m.rp(),l="-1"!=l?l:""):l="";g=(new Date).getTime();var f=a,j=d("30316"),n=d("uyghUfyUGYS6igKXjIHoCg"),t=m.bv.f,G=d("78");l=d(l);var c=Math.round(1/c),H=d("1360783185.1360784877"),k=k?"&amp;oggv="+d(k):"",S=d("ca"),
+38c34
+---
+> <A class="gbzt" href="http://www.google.ca/webhp?hl=en&amp;tab=8w" id="gb_1" onclick="gbar.logger.il(1,{t:1});"><SPAN class="gbtb2"></SPAN><SPAN class="gbts">Search</SPAN></A>
+112c115
+---
+> <A class="gbzt" href="http://www.google.ca/imghp?hl=en&amp;tab=8i" id="gb_2" onclick="gbar.logger.il(1,{t:2});"><SPAN class="gbtb2"></SPAN><SPAN class="gbts">Images</SPAN></A>
+115c118
+---
+>

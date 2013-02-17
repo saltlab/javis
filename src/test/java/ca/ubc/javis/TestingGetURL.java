@@ -8,7 +8,7 @@ public class TestingGetURL {
 
 	@Test
 	public void testGetURL() {
-		String path = "C:\\Users\\Jana\\Desktop\\URLTest.txt";
+		String path = "src/test/resources/URLTest.txt";
 		int size = 3;
 		String [] array = new String[size];
 		array = GetUrls.getArray(path, size);
