@@ -1,28 +1,31 @@
 package ca.ubc.javis;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.util.List;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 public class ContentExtraction2 {
-	
-	public static String path = "src/main/resources/TotalChangeResultLog.txt";
-		 public static void main (String[] args) throws Exception{
-		     StringBuilder sb = new StringBuilder();
-		     BufferedReader br = new BufferedReader(new FileReader(path));
-		     String line;
-		     while ( (line=br.readLine()) != null) {
-		       sb.append(line);
-		     }
-		     sb.toString().trim();
-		     System.out.println("Main String:\n "+sb.toString());
-		     String nohtml = sb.toString().replaceAll("<!-*>","");
-		     System.out.println("First Replacement:\n "+nohtml);
-		     //String newString = nohtml.replaceAll("\\[^.]*\\-*>","");
-		     String newString = nohtml.replaceAll("\\<[^\\>]*\\>","");
-		  //   newString.replaceAll("\\<[^\\>]*\\>","");
-		     System.out.println("New String: \n"+newString);
-		     //nohtml.replaceAll("-*>","");\<[^\>]*\>
-		//     System.out.println(nohtml);
+
+	public static void main(String[] args) throws Exception {
+		List<String> diffLines =
+		        Resources.readLines(Resources.getResource("TotalChangeResultLog.txt"),
+		                Charsets.UTF_8);
+
+		StringBuilder html = new StringBuilder();
+		for (String line : diffLines) {
+			if (hasContent(line) && line.length() > 1) {
+				html.append(line.substring(1));
+			}
+		}
+
+		System.out.println("Only HTML = " + html);
+		System.out.println("Only content: "
+		        + html.toString().replaceAll("<.*?>", System.lineSeparator()));
 	}
-		 
+
+	private static boolean hasContent(String line) {
+		return line.startsWith("<") || line.startsWith(">");
+	}
+
 }
