@@ -3,28 +3,21 @@ package ca.ubc.javis;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
-import com.crawljax.core.Crawler;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
 
-/**
- * @authors:janab
- */
 public class CrawljaxRunner {
 
-	/**
-	 * @param args
-	 */
 	private static final int MAX_CRAWL_DEPTH = 3;
 	private static final int MAX_STATES = 5;
 	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
@@ -37,39 +30,26 @@ public class CrawljaxRunner {
 	public static long startTime;
 	public static String name;
 
-	private static void GetTrace(Exception e) {
-		StackTraceElement elements[] = e.getStackTrace();
-		for (int i = 0, n = elements.length; i < n; i++) {
-			String str =
-			        (elements[i].getFileName() + ":" + elements[i].getLineNumber() + ">> "
-			                + elements[i].getMethodName() + "()");
-			ERROR_LOGGER.warn(str);
-		}
-	}
-
-	private static CrawlSpecification getCrawlSpecification(String URLstring) {
-		URL = URLstring;
+	private static CrawlSpecification getCrawlSpecification(String url) {
+		URL = url;
 		String randomUrl = "";
 		java.net.URI uri;
 		HttpURLConnection conn = null;
 		try {
-			uri = new java.net.URI(URLstring);
+			uri = new java.net.URI(url);
 			conn = (HttpURLConnection) uri.toURL().openConnection();
 			try {
-				int r = conn.getResponseCode();
+				conn.getResponseCode();
 				randomUrl = conn.getURL().toString();
 			} catch (IOException e) {
-				ERROR_LOGGER.warn(e.toString());
-				GetTrace(e);
-				e.printStackTrace();
+				ERROR_LOGGER.warn("Cannot read url {} ", url, e);
 			}
 			URL_LOGGER.info("URL" + (cons + 1) + ": " + randomUrl);
 			conn.connect();
 		} catch (Exception e) {
-			ERROR_LOGGER.warn(e.toString());
-			GetTrace(e);
+			ERROR_LOGGER.warn("Cannot open URL", e);
 		}
-		return configuringCrawlSpecification(URLstring);
+		return configuringCrawlSpecification(url);
 
 	}
 
@@ -86,14 +66,14 @@ public class CrawljaxRunner {
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_STATES);
 		crawler.setDepth(MAX_CRAWL_DEPTH);
-		crawler.setMaximumRuntime(10800);
+		crawler.setMaximumRuntime(3, TimeUnit.HOURS);
 
 		crawler.setInputSpecification(getInputSpecification());
 		String urlName = name.substring(1, name.length());
 		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(urlName));
 
 		return crawler;
-		
+
 	}
 
 	private static InputSpecification getInputSpecification() {
@@ -124,26 +104,21 @@ public class CrawljaxRunner {
 		        GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt", 400);
 		for (int i = 20; i < 21; i++) {
 			try {
-				urlArray[i]= "http://www.google.ca";
+				urlArray[i] = "http://www.google.ca";
 				getName(urlArray[i]);
 				startTime = System.currentTimeMillis();
-				File file = new File(path +i+name);
+				File file = new File(path + i + name);
 				file.mkdir();
 				clearProperties();
 				counter = i;
-				System.setProperty("webdriver.firefox.bin","//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox");
+				// System.setProperty("webdriver.firefox.bin",
+				// "//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox");
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
 				crawljax.run();
 				File logFile = new File(javaPath + "log4j.log");
-				logFile.renameTo(new File(path +i+name+ "//log4j.log"));
+				logFile.renameTo(new File(path + i + name + "//log4j.log"));
 			} catch (CrawljaxException e) {
-
-				ERROR_LOGGER.warn(e.toString());
-				GetTrace(e);
-			} catch (ConfigurationException e) {
-
-				ERROR_LOGGER.warn(e.toString());
-				GetTrace(e);
+				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
 			}
 
 		}
@@ -165,7 +140,7 @@ public class CrawljaxRunner {
 			second = URLstring.indexOf(".com");
 		resticting = initialization.substring(first + 1, second);
 		name = "-".concat(resticting);
-		
+
 	}
 
 	private static void clearProperties() {

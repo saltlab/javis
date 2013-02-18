@@ -18,7 +18,7 @@ import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateVertex;
-import com.crawljax.util.Helper;
+import com.crawljax.util.DomUtils;
 
 public class TestingJavis {
 
@@ -40,7 +40,7 @@ public class TestingJavis {
 		        "<body><a id='achr' href='http://www.google.ca'>Google</a><div><span id='spn'>"
 		                + "</span></div></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element = dom.getElementById("achr");
 
@@ -52,7 +52,7 @@ public class TestingJavis {
 	public void testGetElementAttributes() throws SAXException, IOException {
 		String html = "<body><a id='achr' href='http://www.google.ca'>Google</a></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element = dom.getElementById("achr");
 		Eventable clickable = new Eventable(element, EventType.click);
@@ -65,8 +65,8 @@ public class TestingJavis {
 		String html1 =
 		        "<body><a id='achr' href=\"http://www.google.ca\">Google<img id='img' width='25' /></a></body>";
 		String html2 = "<body><div id='div'>Click here<img id='img' width='25' /></div></body>";
-		Document dom1 = Helper.getDocument(html1);
-		Document dom2 = Helper.getDocument(html2);
+		Document dom1 = DomUtils.asDocument(html1);
+		Document dom2 = DomUtils.asDocument(html2);
 		assertNotNull(dom1);
 		assertNotNull(dom2);
 		Element element1 = dom1.getElementById("img");
@@ -97,7 +97,7 @@ public class TestingJavis {
 		String html =
 		        "<body><a id='achr' href='http://www.google.ca'>Google</a><div id='div'>Click Here!</div></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element = dom.getElementById("achr");
 		Eventable clickable = new Eventable(element, EventType.click);
@@ -124,7 +124,7 @@ public class TestingJavis {
 		String html =
 		        "<body><a id='achr' href='http://www.google.ca'>Google</a><div id='div'>Click Here!</div></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element = dom.getElementById("div");
 		Eventable clickable = new Eventable(element, EventType.click);
@@ -157,7 +157,7 @@ public class TestingJavis {
 		String html =
 		        "<body><a id='achr7' href='http://www.google.ca'>Google</a><a href='http://www.yahoo.ca'>Yahoo<img id='img1'></a><div id='div'>Click Here!</div></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element1 = dom.getElementById("achr7");
 		Eventable clickable1 = new Eventable(element1, EventType.click);
@@ -195,7 +195,7 @@ public class TestingJavis {
 		String html =
 		        "<body><span id='spn1'>Google</span><div id='div1'><img id='img1'/>Click Here!</div></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element1 = dom.getElementById("spn1");
 		Eventable clickable1 = new Eventable(element1, EventType.click);
@@ -234,7 +234,7 @@ public class TestingJavis {
 		String html =
 		        "<body><div id='div1'>Google!</div><a id='achr' href='http://www.google.ca'>Google</a></body>";
 
-		Document dom = Helper.getDocument(html);
+		Document dom = DomUtils.asDocument(html);
 		assertNotNull(dom);
 		Element element1 = dom.getElementById("div1");
 		Eventable clickable1 = new Eventable(element1, EventType.click);

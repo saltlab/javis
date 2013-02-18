@@ -16,8 +16,8 @@ public class TestingDomDifferences {
 		        "<html><body><div id='div1'>Hello</div><a id='a1'>Go to Google</a></body></html>";
 		String secondDom =
 		        "<html><body><div id='div2'>Bye</div><img id='img1' width='23' height='21'/></body></html>";
-		getDomDifferences.getDifferences(firstDom, secondDom, id);
-		assertNotNull(getDomDifferences.buffer);
+		GetDomDifferences.calculateAndSave(firstDom, secondDom, id);
+		assertNotNull(GetDomDifferences.buffer);
 	}
 
 }

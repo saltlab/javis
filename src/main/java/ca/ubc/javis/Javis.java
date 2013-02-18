@@ -10,14 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.XMLFormatter;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.Charsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import com.crawljax.core.CrawlSession;
@@ -30,35 +26,16 @@ import com.google.common.io.Files;
 
 public class Javis implements PostCrawlingPlugin {
 
-	private static Logger myLogger = Logger.getLogger(Javis.class.getName());
-	public static ArrayList <String> visiblearray = new ArrayList<String>() ;
+	private static Logger myLogger = LoggerFactory.getLogger(Javis.class);
+	public static ArrayList<String> visiblearray = new ArrayList<String>();
 	public static ArrayList<String> invisiblearray = new ArrayList<String>();
 	public static ArrayList<String> stateCondition = new ArrayList<String>();
 	public static StringBuffer buffer = new StringBuffer();
 	public static StateFlowGraphInformation sfgInformation = new StateFlowGraphInformation();
-	
+
 	@Override
 	public void postCrawling(CrawlSession session) {
 		int totalDomDifferenceSize;
-		myLogger.setLevel(Level.ALL);
-
-		FileHandler myFileHandler = null;
-		FileHandler Xmlfh = null;
-		try {
-			myFileHandler =
-			        new FileHandler(CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name+"//Log.txt");
-			myFileHandler.setFormatter(new SimpleFormatter());
-
-			Xmlfh = new FileHandler(CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name +"//log.xml");
-			Xmlfh.setFormatter(new XMLFormatter());
-
-		} catch (SecurityException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
 
 		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
 		java.util.Iterator<StateVertex> stateID = states.iterator();
@@ -74,7 +51,7 @@ public class Javis implements PostCrawlingPlugin {
 			int ID = Integer.parseInt(id);
 			if (stateCondition.get(ID - 1).equals("invisible")) {
 				try {
-					getDomDifferences.getDifferences(previous.getDom(), s.getDom(), id);
+					GetDomDifferences.calculateAndSave(previous.getDom(), s.getDom(), id);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
@@ -83,30 +60,28 @@ public class Javis implements PostCrawlingPlugin {
 			}
 			previous = s;
 		}
-		myLogger.addHandler(myFileHandler);
-		myLogger.addHandler(Xmlfh);
-		myLogger.log(Level.ALL, "Visible States: " + sfgInformation.getVisibleState() + " Invisible States: " + sfgInformation.getInvisibleState()
-		        + " Visible Edges: " + sfgInformation.getVisibleEdge() + " Invisible Edges: " + sfgInformation.getInvisibleEdge()
-		        + "\n-------------Edges---------" + "\nVisible Edges are:\n");
+		myLogger.info("Visible States: " + sfgInformation.getVisibleState()
+		        + " Invisible States: " + sfgInformation.getInvisibleState() + " Visible Edges: "
+		        + sfgInformation.getVisibleEdge() + " Invisible Edges: "
+		        + sfgInformation.getInvisibleEdge() + "\n-------------Edges---------"
+		        + "\nVisible Edges are:\n");
 		int i;
 		for (i = 0; i < sfgInformation.getVisibleEdge().get(); i++) {
-			myLogger.log(Level.ALL, visiblearray.get(i));
+			myLogger.info(visiblearray.get(i));
 		}
-		myLogger.log(Level.ALL, "---------------\n Invisible Edges are:");
+		myLogger.info("---------------\n Invisible Edges are:");
 		for (i = 0; i < sfgInformation.getInvisibleEdge().get(); i++) {
-			myLogger.log(Level.ALL, invisiblearray.get(i));
+			myLogger.info(invisiblearray.get(i));
 		}
-		myFileHandler.flush();
-		Xmlfh.flush();
-		myFileHandler.close();
-		Xmlfh.close();
 		File domDifference =
-		        new File(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//TotalChangeResultLog.txt");
+		        new File(CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name
+		                + "//TotalChangeResultLog.txt");
 		if (!domDifference.exists()) {
 			FileWriter totalDomDifferences;
 			try {
 				totalDomDifferences =
-				        new FileWriter(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//TotalChangeResultLog.txt");
+				        new FileWriter(CrawljaxRunner.path + CrawljaxRunner.counter
+				                + CrawljaxRunner.name + "//TotalChangeResultLog.txt");
 				BufferedWriter out = new BufferedWriter(totalDomDifferences);
 				out.flush();
 				out.close();
@@ -115,7 +90,8 @@ public class Javis implements PostCrawlingPlugin {
 			}
 		}
 		totalDomDifferenceSize =
-		        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter+CrawljaxRunner.name+ "//TotalChangeResultLog.txt");
+		        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
+		                + CrawljaxRunner.name + "//TotalChangeResultLog.txt");
 		int contentSize = extractContents(domDifference);
 		printResults(totalDomDifferenceSize, contentSize, session);
 	}
@@ -126,7 +102,9 @@ public class Javis implements PostCrawlingPlugin {
 			String domString = Files.readLines(domDifference, Charsets.UTF_8).toString();
 			ContentExtraction newContent = new ContentExtraction();
 			newContent.getTagValues(domString);
-			size = getDomDifferenceByteSize(CrawljaxRunner.path+CrawljaxRunner.counter+CrawljaxRunner.name+"//TotalContent.txt");
+			size =
+			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
+			                + CrawljaxRunner.name + "//TotalContent.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -156,14 +134,17 @@ public class Javis implements PostCrawlingPlugin {
 					}
 					if (anchorVisible || imgVisible) {
 						visibleEdge = true;
-						stateCondition.add((sfgInformation.getInputCounter().get() + sfgInformation.getVisibleState().get()), "visible");
+						stateCondition.add(
+						        (sfgInformation.getInputCounter().get() + sfgInformation
+						                .getVisibleState().get()), "visible");
 						sfgInformation.getVisibleState().getAndIncrement();
 						break;
 					}
 				}
 			}
 			if (!visibleEdge) {
-				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "invisible");
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+				        .getVisibleState().get()), "invisible");
 				sfgInformation.getInvisibleState().getAndIncrement();
 			}
 			java.util.Iterator<Eventable> edg1 = event.iterator();
@@ -196,7 +177,7 @@ public class Javis implements PostCrawlingPlugin {
 				node = edge.getElement().getNode().getParentNode();
 				imgVisible = imgChecker(node, edge);
 				if (imgVisible) {
-					visiblearray.add(sfgInformation.getVisibleEdge().get(),edge.toString());
+					visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
 					sfgInformation.getVisibleEdge().getAndIncrement();
 				} else {
 					invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
@@ -214,7 +195,8 @@ public class Javis implements PostCrawlingPlugin {
 		edge = edg.next();
 		if (isRelevantTag(edge)) {
 			invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
-			stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "invisible");
+			stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+			        .getVisibleState().get()), "invisible");
 			sfgInformation.getInvisibleState().getAndIncrement();
 			sfgInformation.getInvisibleEdge().getAndIncrement();
 			getEdgeInfo(edge);
@@ -222,12 +204,14 @@ public class Javis implements PostCrawlingPlugin {
 			anchorVisible = anchorVisibilityChecking(edge);
 			if (anchorVisible) {
 				visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "visible");
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+				        .getVisibleState().get()), "visible");
 				sfgInformation.getVisibleState().getAndIncrement();
 				sfgInformation.getVisibleEdge().getAndIncrement();
 			} else {
 				invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()),"invisible");
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+				        .getVisibleState().get()), "invisible");
 				sfgInformation.getInvisibleState().getAndIncrement();
 				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
@@ -237,12 +221,14 @@ public class Javis implements PostCrawlingPlugin {
 			imgVisible = imgChecker(node, edge);
 			if (imgVisible) {
 				visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()), "visible");
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+				        .getVisibleState().get()), "visible");
 				sfgInformation.getVisibleState().getAndIncrement();
 				sfgInformation.getVisibleEdge().getAndIncrement();
 			} else {
 				invisiblearray.add(sfgInformation.getInvisibleEdge().get(), edge.toString());
-				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation.getVisibleState().get()),"invisible");
+				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
+				        .getVisibleState().get()), "invisible");
 				sfgInformation.getInvisibleState().getAndIncrement();
 				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
@@ -375,30 +361,36 @@ public class Javis implements PostCrawlingPlugin {
 		return size;
 	}
 
-	public void printResults(int size, int contentSize ,CrawlSession session){
-		
+	public void printResults(int size, int contentSize, CrawlSession session) {
+
 		long timing = System.currentTimeMillis() - CrawljaxRunner.startTime;
-		String result = ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
-			        + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
-			        + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
-			        + sfgInformation.getVisibleState() + "\nInvisible States: " + sfgInformation.getInvisibleState()
-			        + "\nVisible Edges: " + sfgInformation.getVisibleEdge() + "\nInvisible Edges: " + sfgInformation.getInvisibleEdge()
-			        + "\nTotalDomDifferenceSize (Bytes): " + size
-			        + "\nTotalDomDifferenceSize (KB): " + (size / 1024)
-			        + "\nTotalContent (Bytes): "+ contentSize
-			        + "\nTotalContent (KB) : " + (contentSize/1024)
-			        + "\nElapsed Time (milliseconds): " + timing
-			        + "\n--------Clickables---------" + "\nA Visible: " + sfgInformation.getAVisCounter()
-			        + "\nA Invisible: " + sfgInformation.getAInvisCounter() + "\nDiv: " + sfgInformation.getDivCounter() + "\nSpan: "
-			        + sfgInformation.getSpanCounter() + "\nImg Visible: " + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
-			        + sfgInformation.getImgInvisCounter() + "\nInput: " + sfgInformation.getInputCounter() + "\nButton: "
-			        + sfgInformation.getButtonCounter());
-				try {
-					Files.write(result, new File(CrawljaxRunner.path + CrawljaxRunner.counter+ CrawljaxRunner.name +"//FinalResults.txt"), Charsets.UTF_8);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	
+		String result =
+		        ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
+		                + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
+		                + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
+		                + sfgInformation.getVisibleState() + "\nInvisible States: "
+		                + sfgInformation.getInvisibleState() + "\nVisible Edges: "
+		                + sfgInformation.getVisibleEdge() + "\nInvisible Edges: "
+		                + sfgInformation.getInvisibleEdge()
+		                + "\nTotalDomDifferenceSize (Bytes): " + size
+		                + "\nTotalDomDifferenceSize (KB): " + (size / 1024)
+		                + "\nTotalContent (Bytes): " + contentSize + "\nTotalContent (KB) : "
+		                + (contentSize / 1024) + "\nElapsed Time (milliseconds): " + timing
+		                + "\n--------Clickables---------" + "\nA Visible: "
+		                + sfgInformation.getAVisCounter() + "\nA Invisible: "
+		                + sfgInformation.getAInvisCounter() + "\nDiv: "
+		                + sfgInformation.getDivCounter() + "\nSpan: "
+		                + sfgInformation.getSpanCounter() + "\nImg Visible: "
+		                + sfgInformation.getImgVisCounter() + "\nImg Invisible: "
+		                + sfgInformation.getImgInvisCounter() + "\nInput: "
+		                + sfgInformation.getInputCounter() + "\nButton: " + sfgInformation
+		                .getButtonCounter());
+		try {
+			Files.write(result, new File(CrawljaxRunner.path + CrawljaxRunner.counter
+			        + CrawljaxRunner.name + "//FinalResults.txt"), Charsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
