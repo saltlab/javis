@@ -65,6 +65,7 @@ public class CrawljaxRunner {
 		crawler.click("span");
 		crawler.click("input").withAttribute("type", "button");
 		crawler.dontClick("form");
+		crawler.dontClick("iframe");
 
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_STATES);
@@ -103,10 +104,9 @@ public class CrawljaxRunner {
 		String[] urlArray = new String[400];
 		urlArray =
 		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 20; i < 21; i++) {
+		for (int i = 1; i < 2; i++) {
 			try {
 				Files.write("", new File(logPath),Charsets.UTF_8);
-				urlArray[i] = "http://www.google.ca";
 				getName(urlArray[i]);
 				startTime = System.currentTimeMillis();
 				File file = new File(path + i + name);

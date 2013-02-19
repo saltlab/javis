@@ -100,8 +100,8 @@ public class Javis implements PostCrawlingPlugin {
 		int size = 0;
 		try {
 			String domString = Files.readLines(domDifference, Charsets.UTF_8).toString();
-			ContentExtraction newContent = new ContentExtraction();
-			newContent.getTagValues(domString);
+			ContentExtraction_Final newContent = new ContentExtraction_Final();
+			newContent.getContents(domString);
 			size =
 			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
 			                + CrawljaxRunner.name + "//TotalContent.txt");
