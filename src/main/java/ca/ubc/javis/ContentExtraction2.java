@@ -20,8 +20,10 @@ public class ContentExtraction2 {
 		}
 
 		String onlyContent = html.toString().replaceAll("<.*?>", System.lineSeparator());
+		onlyContent = onlyContent.replaceAll(".*\\{.*?}", System.lineSeparator());
 		onlyContent = onlyContent.replaceAll(".*;", System.lineSeparator());
-		onlyContent = onlyContent.replaceAll(".*,", System.lineSeparator());
+	//	onlyContent = onlyContent.replaceAll(".*,", System.lineSeparator());
+	//	onlyContent = onlyContent.replaceAll("(.*-)", System.lineSeparator());
 		onlyContent.trim();
 		onlyContent = onlyContent.replaceAll("\\W"," ");
 		onlyContent = onlyContent.replaceAll("\\s+"," ");
@@ -35,3 +37,4 @@ public class ContentExtraction2 {
 	}
 
 }
+
