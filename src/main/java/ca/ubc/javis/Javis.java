@@ -60,7 +60,7 @@ public class Javis implements PostCrawlingPlugin {
 			}
 			previous = s;
 		}
-		myLogger.info("Visible States: " + sfgInformation.getVisibleState()
+		myLogger.info("\nVisible States: " + sfgInformation.getVisibleState()
 		        + " Invisible States: " + sfgInformation.getInvisibleState() + " Visible Edges: "
 		        + sfgInformation.getVisibleEdge() + " Invisible Edges: "
 		        + sfgInformation.getInvisibleEdge() + "\n-------------Edges---------"
@@ -69,7 +69,7 @@ public class Javis implements PostCrawlingPlugin {
 		for (i = 0; i < sfgInformation.getVisibleEdge().get(); i++) {
 			myLogger.info(visiblearray.get(i));
 		}
-		myLogger.info("---------------\n Invisible Edges are:");
+		myLogger.info("\n---------------\n Invisible Edges are:");
 		for (i = 0; i < sfgInformation.getInvisibleEdge().get(); i++) {
 			myLogger.info(invisiblearray.get(i));
 		}

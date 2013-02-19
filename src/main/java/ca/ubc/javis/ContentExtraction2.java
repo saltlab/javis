@@ -19,9 +19,15 @@ public class ContentExtraction2 {
 			}
 		}
 
+		String onlyContent = html.toString().replaceAll("<.*?>", System.lineSeparator());
+		onlyContent = onlyContent.replaceAll(".*;", System.lineSeparator());
+		onlyContent = onlyContent.replaceAll(".*,", System.lineSeparator());
+		onlyContent.trim();
+		onlyContent = onlyContent.replaceAll("\\W"," ");
+		onlyContent = onlyContent.replaceAll("\\s+"," ");
+		
 		System.out.println("Only HTML = " + html);
-		System.out.println("Only content: "
-		        + html.toString().replaceAll("<.*?>", System.lineSeparator()));
+		System.out.println("Only content: " + onlyContent.trim());
 	}
 
 	private static boolean hasContent(String line) {

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +17,19 @@ import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
+import com.google.common.io.Files;
 
 public class CrawljaxRunner {
 
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 5;
+	private static final int MAX_STATES = 10;
 	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
 	private static final Logger ERROR_LOGGER = LoggerFactory.getLogger(CrawljaxRunner.class);
 
 	public static int cons = 0, counter = 0;
 	public static String URL;
-	public static String path = "//ubc//ece//home//am//grads//janab//JavisResults//";
-	public static String javaPath = "//ubc//ece//home//am//grads//janab//Github//javis//";
+	public static String path = "/ubc/ece/home/am/grads/janab/JavisResults/";
+	public static String logPath = "./target/javis.log";
 	public static long startTime;
 	public static String name;
 
@@ -96,14 +99,13 @@ public class CrawljaxRunner {
 		return crawljaxConfiguration;
 	}
 
-	public static void main(String[] args) {
-
-		System.out.println("start");
+	public static void main(String[] args) throws IOException {
 		String[] urlArray = new String[400];
 		urlArray =
-		        GetUrls.getArray("//ubc//ece//home//am//grads//janab//Desktop//Alexa.txt", 400);
+		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
 		for (int i = 20; i < 21; i++) {
 			try {
+				Files.write("", new File(logPath),Charsets.UTF_8);
 				urlArray[i] = "http://www.google.ca";
 				getName(urlArray[i]);
 				startTime = System.currentTimeMillis();
@@ -111,12 +113,13 @@ public class CrawljaxRunner {
 				file.mkdir();
 				clearProperties();
 				counter = i;
-				// System.setProperty("webdriver.firefox.bin",
-				// "//ubc//ece//home//am//grads//janab//Firefox10//firefox//firefox");
+				 System.setProperty("webdriver.firefox.bin",
+				 "//ubc//ece//home//am//grads//janab//Firefox18//firefox//firefox");
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
 				crawljax.run();
-				File logFile = new File(javaPath + "log4j.log");
-				logFile.renameTo(new File(path + i + name + "//log4j.log"));
+				File logFile = new File(logPath);
+				if(logFile.exists())
+					FileUtils.copyFile(logFile,new File(path + i + name +"/"+ logFile.getName()));
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
 			}
