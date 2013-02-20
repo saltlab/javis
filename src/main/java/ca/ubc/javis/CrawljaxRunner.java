@@ -3,6 +3,8 @@ package ca.ubc.javis;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.nio.Buffer;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.Charsets;
@@ -22,7 +24,7 @@ import com.google.common.io.Files;
 public class CrawljaxRunner {
 
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 10;
+	private static final int MAX_STATES = 50;
 	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
 	private static final Logger ERROR_LOGGER = LoggerFactory.getLogger(CrawljaxRunner.class);
 
@@ -70,7 +72,7 @@ public class CrawljaxRunner {
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_STATES);
 		crawler.setDepth(MAX_CRAWL_DEPTH);
-		crawler.setMaximumRuntime(3, TimeUnit.HOURS);
+		crawler.setMaximumRuntime(5, TimeUnit.HOURS);
 
 		crawler.setInputSpecification(getInputSpecification());
 		String urlName = name.substring(1, name.length());
@@ -104,13 +106,18 @@ public class CrawljaxRunner {
 		String[] urlArray = new String[400];
 		urlArray =
 		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 1; i < 2; i++) {
+		for (int i = 0 ; i < 1 ; i++) {
 			try {
+				int j = i;
 				Files.write("", new File(logPath),Charsets.UTF_8);
 				getName(urlArray[i]);
 				startTime = System.currentTimeMillis();
 				File file = new File(path + i + name);
 				file.mkdir();
+				File totalContentFile = new File(path + i + name + "/TotalContent.txt");
+				totalContentFile.createNewFile();
+				File totalChangeFile = new File(path + i + name + "/TotalChangeResultLog.txt");
+				totalChangeFile.createNewFile();
 				clearProperties();
 				counter = i;
 				 System.setProperty("webdriver.firefox.bin",
@@ -119,7 +126,9 @@ public class CrawljaxRunner {
 				crawljax.run();
 				File logFile = new File(logPath);
 				if(logFile.exists())
-					FileUtils.copyFile(logFile,new File(path + i + name +"/"+ logFile.getName()));
+					copyToCurrentURL(logFile,j);
+					//logFile.renameTo(new File(path + i + name +"/"+ logFile.getName()));
+
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
 			}
@@ -128,17 +137,45 @@ public class CrawljaxRunner {
 
 	}
 
+	private static void copyToCurrentURL(File logfile, int i) throws IOException {
+		
+		List<String> crawljaxLog = Files.readLines(logfile, Charsets.UTF_8);
+		
+		StringBuilder logContents = new StringBuilder();
+		
+		i++;
+		if(i != 0){
+			crawljaxLog.toString().trim();
+		}	
+			for (String line : crawljaxLog) {
+				if (line.length() > 1) {
+					logContents.append(line.substring(1));
+					logContents.append("\n");
+				}
+			}
+			Files.write(logContents, new File(path + CrawljaxRunner.counter + name +"/javis.log"), Charsets.UTF_8);
+			//Files.write(" ",new File(logPath), Charsets.UTF_8);
+		}
+		
+	
+
 	private static void getName(String URLstring) {
 		String initialization = "", resticting = "";
 		int first = 0, second = 0;
 		initialization = URLstring;
 		first = initialization.indexOf(".");
-		if (initialization.contains("org"))
+		if (initialization.contains(".org"))
 			second = initialization.indexOf("org");
 		else if (initialization.contains(".ru"))
 			second = URLstring.indexOf(".ru");
 		else if (initialization.contains(".ca"))
 			second = URLstring.indexOf(".ca");
+		else if (initialization.contains(".co"))
+			second = URLstring.indexOf(".co");
+		else if (initialization.contains(".ly"))
+			second = URLstring.indexOf(".ly");
+		else if (initialization.contains(".se"))
+			second = URLstring.indexOf(".se");
 		else
 			second = URLstring.indexOf(".com");
 		resticting = initialization.substring(first + 1, second);
@@ -147,6 +184,7 @@ public class CrawljaxRunner {
 	}
 
 	private static void clearProperties() {
+		GetDomDifferences.buffer.delete(0, GetDomDifferences.buffer.length());
 		Javis.sfgInformation.getVisibleEdge().set(0);
 		Javis.sfgInformation.getInvisibleEdge().set(0);
 		Javis.sfgInformation.getInvisibleState().set(0);

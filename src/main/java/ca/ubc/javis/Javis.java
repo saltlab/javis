@@ -73,6 +73,7 @@ public class Javis implements PostCrawlingPlugin {
 		for (i = 0; i < sfgInformation.getInvisibleEdge().get(); i++) {
 			myLogger.info(invisiblearray.get(i));
 		}
+		myLogger.info("\n----------------------");
 		File domDifference =
 		        new File(CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name
 		                + "//TotalChangeResultLog.txt");
@@ -81,7 +82,7 @@ public class Javis implements PostCrawlingPlugin {
 			try {
 				totalDomDifferences =
 				        new FileWriter(CrawljaxRunner.path + CrawljaxRunner.counter
-				                + CrawljaxRunner.name + "//TotalChangeResultLog.txt");
+				                + CrawljaxRunner.name + "/TotalChangeResultLog.txt");
 				BufferedWriter out = new BufferedWriter(totalDomDifferences);
 				out.flush();
 				out.close();
@@ -89,22 +90,26 @@ public class Javis implements PostCrawlingPlugin {
 				e.printStackTrace();
 			}
 		}
-		totalDomDifferenceSize =
-		        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
-		                + CrawljaxRunner.name + "//TotalChangeResultLog.txt");
-		int contentSize = extractContents(domDifference);
-		printResults(totalDomDifferenceSize, contentSize, session);
+		try {
+			totalDomDifferenceSize =
+			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
+			                + CrawljaxRunner.name + "/TotalChangeResultLog.txt");
+			int contentSize = extractContents();
+			printResults(totalDomDifferenceSize, contentSize, session);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
-	private int extractContents(File domDifference) {
+	private int extractContents() {
 		int size = 0;
 		try {
-			String domString = Files.readLines(domDifference, Charsets.UTF_8).toString();
 			ContentExtraction_Final newContent = new ContentExtraction_Final();
-			newContent.getContents(domString);
-			size =
-			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
-			                + CrawljaxRunner.name + "//TotalContent.txt");
+			newContent.getContents();
+			size =getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
+			                + CrawljaxRunner.name + "/TotalContent.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -328,36 +333,19 @@ public class Javis implements PostCrawlingPlugin {
 		return visible;
 	}
 
-	public int getDomDifferenceByteSize(String path) {
+	public int getDomDifferenceByteSize(String path) throws IOException {
 
-		int size = 0;
-		StringBuffer buffer = new StringBuffer();
-		FileReader file;
-		try {
-
-			file = new FileReader(path);
-			BufferedReader br = new BufferedReader(file);
-			String strLine = "";
-
-			try {
-				while (br.readLine() != null) {
-					buffer.append(br.readLine());
-				}
-			} catch (IOException e) {
-
-				e.printStackTrace();
+		List<String> strLine =
+		        Files.readLines(new File(path), Charsets.UTF_8);
+		
+		StringBuilder lines = new StringBuilder();
+		for (String line : strLine) {
+			if (line.length() > 1) {
+				lines.append(line.substring(1));
 			}
-			strLine = buffer.toString().trim();
-			size = (strLine.getBytes().length);
-			try {
-				br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (FileNotFoundException e1) {
-
-			e1.printStackTrace();
 		}
+			String content = lines.toString().trim(); 
+			int size = (content.getBytes().length);
 		return size;
 	}
 

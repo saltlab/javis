@@ -6,14 +6,14 @@ import java.util.List;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.google.common.io.Resources;
+
 
 public class ContentExtraction_Final {
 
-	public void getContents(String str) throws IOException {
+	public void getContents() throws IOException {
 		
 		List<String> diffLines =
-		        Resources.readLines(Resources.getResource("TotalChangeResultLog.txt"),
+		        Files.readLines(new File(CrawljaxRunner.path+CrawljaxRunner.counter+CrawljaxRunner.name+"//TotalChangeResultLog.txt"),
 		                Charsets.UTF_8);
 
 		StringBuilder html = new StringBuilder();
@@ -26,12 +26,11 @@ public class ContentExtraction_Final {
 		String onlyContent = html.toString().replaceAll("<.*?>", System.lineSeparator());
 		onlyContent = onlyContent.replaceAll(".*\\{.*?}", System.lineSeparator());
 		onlyContent = onlyContent.replaceAll(".*;", System.lineSeparator());
-	//	onlyContent = onlyContent.replaceAll(".*,", System.lineSeparator());
-	//	onlyContent = onlyContent.replaceAll("(.*-)", System.lineSeparator());
 		onlyContent.trim();
 		onlyContent = onlyContent.replaceAll("\\W"," ");
 		onlyContent = onlyContent.replaceAll("\\s+"," ");
-		Files.write(onlyContent.trim(),new File(CrawljaxRunner.path+CrawljaxRunner.counter+CrawljaxRunner.name+"//TotalContent.txt"), Charsets.UTF_8);
+		Files.write(onlyContent.trim(),new File(CrawljaxRunner.path + CrawljaxRunner.counter
+		        + CrawljaxRunner.name + "//TotalContent.txt"), Charsets.UTF_8);
 		/*System.out.println("Only HTML = " + html);
 		System.out.println("Only content: " + onlyContent.trim());*/
 	}

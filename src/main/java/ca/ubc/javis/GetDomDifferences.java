@@ -20,6 +20,7 @@ public class GetDomDifferences {
 	public static void calculateAndSave(String previous, String next, String id)
 	        throws IOException, InterruptedException {
 
+		
 		try {
 			Files.write(previous, new File(CrawljaxRunner.path + CrawljaxRunner.counter
 			        + CrawljaxRunner.name + "//firstDom.txt"), Charsets.UTF_8);
@@ -40,10 +41,11 @@ public class GetDomDifferences {
 
 	public static void printResult(String str1, String str2, String id) throws SecurityException,
 	        IOException {
-
+			
 		try {
-			Files.write(str2, new File(CrawljaxRunner.path + CrawljaxRunner.counter
-			        + CrawljaxRunner.name + "//TotalChangeResultLog.txt"), Charsets.UTF_8);
+			File totalChange = new File(CrawljaxRunner.path + CrawljaxRunner.counter
+			        + CrawljaxRunner.name + "//TotalChangeResultLog.txt");
+			Files.write(str2, totalChange , Charsets.UTF_8);
 			Files.write(str1, new File(CrawljaxRunner.path + CrawljaxRunner.counter
 			        + CrawljaxRunner.name + "//individualChangeResultLog" + id + ".txt"),
 			        Charsets.UTF_8);
