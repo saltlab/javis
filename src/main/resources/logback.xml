@@ -8,11 +8,17 @@
 		</encoder>
 	</appender>
 
+	<property name="HOME_PATH" value=".target/" scope="CONTEXT" />
+    <property name="MYAPP_LOG_FILE" value="javis.log" />
+	
+	
+	<appender name="myAppender" class="ch.qos.logback.core.FileAppender">
+		<!-- <file>target/javis.log</file> -->
+				
+        <file>${HOME_PATH}${MYAPP_LOG_FILE}</file>
+        <fileNamePattern>${HOME_PATH}${MYAPP_LOG_FILE}.${MYAPP_ROLLING_TEMPLATE}</fileNamePattern>
 
- 	<timestamp key="Name" datePattern="h:mm a"/>
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<!--  <file>target/javis.log</file> -->
-		<file>log-${Name}.txt</file>
+
 		<append>true</append>
 		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
 			by default -->
@@ -25,10 +31,15 @@
 	<logger name="ca.ubc.javis" level="TRACE" />
 
 
-
 	<root level="WARN">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</root>
 
 </configuration>
+
+ 
+
+    
+
+    

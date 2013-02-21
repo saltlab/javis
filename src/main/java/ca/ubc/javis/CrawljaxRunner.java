@@ -24,7 +24,7 @@ import com.google.common.io.Files;
 public class CrawljaxRunner {
 
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 50;
+	private static final int MAX_STATES = 5;
 	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
 	private static final Logger ERROR_LOGGER = LoggerFactory.getLogger(CrawljaxRunner.class);
 
@@ -106,8 +106,10 @@ public class CrawljaxRunner {
 		String[] urlArray = new String[400];
 		urlArray =
 		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 0 ; i < 1 ; i++) {
+		for (int i = 10 ; i < 11 ; i++) {
 			try {
+				DynamicAppender dynamicAppender = new DynamicAppender();
+				dynamicAppender.initializeLogback(logPath);
 				int j = i;
 				Files.write("", new File(logPath),Charsets.UTF_8);
 				getName(urlArray[i]);
@@ -128,7 +130,7 @@ public class CrawljaxRunner {
 				if(logFile.exists())
 					copyToCurrentURL(logFile,j);
 					//logFile.renameTo(new File(path + i + name +"/"+ logFile.getName()));
-
+				dynamicAppender.createLogger(path + i+ name + "/javis.log");
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
 			}
