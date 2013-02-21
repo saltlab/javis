@@ -24,7 +24,7 @@ import com.google.common.io.Files;
 public class CrawljaxRunner {
 
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 5;
+	private static final int MAX_STATES = 50;
 	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
 	private static final Logger ERROR_LOGGER = LoggerFactory.getLogger(CrawljaxRunner.class);
 
@@ -106,14 +106,12 @@ public class CrawljaxRunner {
 		String[] urlArray = new String[400];
 		urlArray =
 		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 10 ; i < 11 ; i++) {
+		for (int i = 21 ; i < 23 ; i++) {
 			try {
-				DynamicAppender dynamicAppender = new DynamicAppender();
-				dynamicAppender.initializeLogback(logPath);
 				int j = i;
 				Files.write("", new File(logPath),Charsets.UTF_8);
 				getName(urlArray[i]);
-				startTime = System.currentTimeMillis();
+				
 				File file = new File(path + i + name);
 				file.mkdir();
 				File totalContentFile = new File(path + i + name + "/TotalContent.txt");
@@ -125,12 +123,14 @@ public class CrawljaxRunner {
 				 System.setProperty("webdriver.firefox.bin",
 				 "//ubc//ece//home//am//grads//janab//Firefox18//firefox//firefox");
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
+				startTime = crawljax.getStartCrawl();
 				crawljax.run();
+				
 				File logFile = new File(logPath);
 				if(logFile.exists())
 					copyToCurrentURL(logFile,j);
 					//logFile.renameTo(new File(path + i + name +"/"+ logFile.getName()));
-				dynamicAppender.createLogger(path + i+ name + "/javis.log");
+
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
 			}
@@ -156,7 +156,7 @@ public class CrawljaxRunner {
 				}
 			}
 			Files.write(logContents, new File(path + CrawljaxRunner.counter + name +"/javis.log"), Charsets.UTF_8);
-			//Files.write(" ",new File(logPath), Charsets.UTF_8);
+			//logfile.delete();
 		}
 		
 	
@@ -205,3 +205,4 @@ public class CrawljaxRunner {
 	}
 
 }
+

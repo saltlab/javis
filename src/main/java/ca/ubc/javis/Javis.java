@@ -523,20 +523,21 @@ public class Javis implements PostCrawlingPlugin {
 	public void printResults(int size, int contentSize, CrawlSession session) {
 
 		long timing = System.currentTimeMillis() - CrawljaxRunner.startTime;
+		checkElements();
 		String result =
 		        ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
 		                + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
 		                + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
 		                + sfgInformation.getVisibleState() + "\nInvisible States: "
 		                + sfgInformation.getInvisibleState() + "\nVisible Edges: "
-		                + sfgInformation.getVisibleEdge() + "\nInvisible Edges: "
+		                + (sfgInformation.getVisibleEdge().get()) + "\nInvisible Edges: "
 		                + sfgInformation.getInvisibleEdge()
 		                + "\nTotalDomDifferenceSize (Bytes): " + size
 		                + "\nTotalDomDifferenceSize (KB): " + (size / 1024)
 		                + "\nTotalContent (Bytes): " + contentSize + "\nTotalContent (KB) : "
 		                + (contentSize / 1024) + "\nElapsed Time (milliseconds): " + timing
 		                + "\n--------Clickables---------" + "\nA Visible: "
-		                + sfgInformation.getAVisCounter() + "\nA Invisible: "
+		                + (sfgInformation.getAVisCounter().get()) + "\nA Invisible: "
 		                + sfgInformation.getAInvisCounter() + "\nDiv: "
 		                + sfgInformation.getDivCounter() + "\nSpan: "
 		                + sfgInformation.getSpanCounter() + "\nImg Visible: "
@@ -553,4 +554,19 @@ public class Javis implements PostCrawlingPlugin {
 
 	}
 
+	private void checkElements() {
+		int avis = sfgInformation.getAVisCounter().get();
+		int ainvis = sfgInformation.getAInvisCounter().get();
+		int allinvisEdges = (sfgInformation.getButtonCounter().get() +
+				sfgInformation.getDivCounter().get() + sfgInformation.getImgInvisCounter().get() +
+				sfgInformation.getInputCounter().get() + sfgInformation.getSpanCounter().get());
+		int remainingInvisEdges = (sfgInformation.getInvisibleEdge().get() - allinvisEdges); 
+		int remainingVisEdges = sfgInformation.getVisibleEdge().get() - sfgInformation.getImgVisCounter().get();
+		if( remainingVisEdges != avis)
+			sfgInformation.getAVisCounter().set(remainingVisEdges);
+		if( remainingInvisEdges != ainvis)
+			sfgInformation.getAInvisCounter().set(remainingInvisEdges);
+	}
+
 }
+
