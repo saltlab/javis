@@ -127,7 +127,7 @@ public class CrawljaxRunner {
 				File logFile = new File(logPath);
 				if(logFile.exists())
 					copyToCurrentURL(logFile,j);
-					//logFile.renameTo(new File(path + i + name +"/"+ logFile.getName()));
+					
 
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);

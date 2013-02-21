@@ -40,10 +40,7 @@ public class Javis implements PostCrawlingPlugin {
 		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
 		java.util.Iterator<StateVertex> stateID = states.iterator();
 		StateVertex s = stateID.next();
-	//	StateVertex previous = stateID.next();
 		for(int i = 0 ; i < states.size(); i++){
-			/*if (s.getName().equals("index"))
-				continue;*/
 			Set<Eventable> eve = session.getStateFlowGraph().getIncomingClickable(s);
 			if(eve.size() == 0){
 				indexFlag = false;
@@ -98,7 +95,7 @@ public class Javis implements PostCrawlingPlugin {
 			int contentSize = extractContents();
 			printResults(totalDomDifferenceSize, contentSize, session);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -163,7 +160,7 @@ public class Javis implements PostCrawlingPlugin {
 							fromState = getCondition(src.getName());
 							fromState++;
 							GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), (Integer.toString(i+1)+"from"+ (Integer.toString(fromState))));
-					//	GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), Integer.toString(i));
+					
 					}}
 						
 				} catch (IOException e) {
