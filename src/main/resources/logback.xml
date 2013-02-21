@@ -8,8 +8,11 @@
 		</encoder>
 	</appender>
 
+
+ 	<timestamp key="Name" datePattern="h:mm a"/>
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>target/javis.log</file>
+		<!--  <file>target/javis.log</file> -->
+		<file>log-${Name}.txt</file>
 		<append>true</append>
 		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
 			by default -->
@@ -20,6 +23,7 @@
 
 	<logger name="com.crawljax" level="INFO" />
 	<logger name="ca.ubc.javis" level="TRACE" />
+
 
 
 	<root level="WARN">
