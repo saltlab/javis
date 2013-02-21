@@ -1,13 +1,11 @@
 package ca.ubc.javis;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,11 +25,13 @@ import com.google.common.io.Files;
 public class Javis implements PostCrawlingPlugin {
 
 	private static Logger myLogger = LoggerFactory.getLogger(Javis.class);
+	private static Logger sfgLogger = LoggerFactory.getLogger(Javis.class);
 	public static ArrayList<String> visiblearray = new ArrayList<String>();
 	public static ArrayList<String> invisiblearray = new ArrayList<String>();
 	public static ArrayList<String> stateCondition = new ArrayList<String>();
 	public static StringBuffer buffer = new StringBuffer();
 	public static StateFlowGraphInformation sfgInformation = new StateFlowGraphInformation();
+	public static boolean indexFlag = true;
 
 	@Override
 	public void postCrawling(CrawlSession session) {
@@ -39,32 +39,33 @@ public class Javis implements PostCrawlingPlugin {
 
 		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
 		java.util.Iterator<StateVertex> stateID = states.iterator();
-		StateVertex previous = stateID.next();
-		while (stateID.hasNext()) {
-			StateVertex s = stateID.next();
-			if (s.getName().equals("index"))
-				continue;
+		StateVertex s = stateID.next();
+	//	StateVertex previous = stateID.next();
+		for(int i = 0 ; i < states.size(); i++){
+			/*if (s.getName().equals("index"))
+				continue;*/
 			Set<Eventable> eve = session.getStateFlowGraph().getIncomingClickable(s);
-			String name = s.getName();
-			stateCategorization(eve);
-			String id = name.substring(5, name.length());
-			int ID = Integer.parseInt(id);
-			if (stateCondition.get(ID - 1).equals("invisible")) {
-				try {
-					GetDomDifferences.calculateAndSave(previous.getDom(), s.getDom(), id);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			if(eve.size() == 0){
+				indexFlag = false;
+				s = stateID.next();
+				continue;
 			}
-			previous = s;
+				
+			stateCategorization(eve);
+			sfgLogger.info(s.getName()+" Incoming Edge(s): " + session.getStateFlowGraph().getIncomingClickable(s) + "\n");
+			int j = getCondition(s.getName());
+			sfgLogger.info("Edge is: " + eve + "Condition: " + stateCondition.get(j));
+			if(stateID.hasNext())
+				s = stateID.next();
+			else
+				break;
 		}
+		getDomDifferenceForInvisibleStates(session);
 		myLogger.info("\nVisible States: " + sfgInformation.getVisibleState()
 		        + " Invisible States: " + sfgInformation.getInvisibleState() + " Visible Edges: "
 		        + sfgInformation.getVisibleEdge() + " Invisible Edges: "
 		        + sfgInformation.getInvisibleEdge() + "\n-------------Edges---------"
-		        + "\nVisible Edges are:\n");
+		        + "\n Visible Edges are:\n");
 		int i;
 		for (i = 0; i < sfgInformation.getVisibleEdge().get(); i++) {
 			myLogger.info(visiblearray.get(i));
@@ -103,6 +104,164 @@ public class Javis implements PostCrawlingPlugin {
 		
 	}
 
+	private static int getCondition(String name) {
+		
+		String id = "";
+		int ID;
+		if(name.equalsIgnoreCase("index") && indexFlag)
+			return 0;
+		else if(indexFlag && !name.equalsIgnoreCase("index"))
+		{
+			id = name.substring(5, name.length());
+			ID = Integer.parseInt(id);
+			return ID;
+		}
+		else{
+			id = name.substring(5, name.length());
+			ID = Integer.parseInt(id);
+			return ID-1;
+		}
+	}
+
+	private void getDomDifferenceForInvisibleStates(CrawlSession session) {
+		
+		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
+		StateVertex src;
+		int fromState = 0;
+		String sourceState;
+		for(int i = 0 ; i < stateCondition.size() ; i++ ){
+			if(stateCondition.get(i).equalsIgnoreCase("invisible")){
+				try {
+					StateVertex dest = getCurrentState(states, i);
+					List<StateVertex> srcStateVertexList = getPreviousState(session, dest);
+					java.util.Iterator<StateVertex> srcStateVertex = srcStateVertexList.iterator();
+					if(srcStateVertexList.size()>1)
+						for(int j = 0 ; j < srcStateVertexList.size() ; j ++){
+							src = srcStateVertex.next();
+							if(src.getName().equalsIgnoreCase("index")){
+								sourceState = "index";
+								GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), (Integer.toString(i+1)+"from"+ sourceState));
+							}
+							else{
+								fromState = getCondition(src.getName());
+								fromState++;
+								GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), (Integer.toString(i+1)+"from"+ (Integer.toString(fromState))));
+							}
+							if(srcStateVertex.hasNext())
+								continue;
+							else
+								break;
+						}
+							
+					else{
+						src = srcStateVertex.next();
+						if(src.getName().equalsIgnoreCase("index")){
+							sourceState = "index";
+							GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), (Integer.toString(i+1)+"from"+ sourceState));
+						}
+						else{
+							fromState = getCondition(src.getName());
+							fromState++;
+							GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), (Integer.toString(i+1)+"from"+ (Integer.toString(fromState))));
+					//	GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(), Integer.toString(i));
+					}}
+						
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}}
+			
+	
+		
+	}
+
+
+	private List<StateVertex> getPreviousState(CrawlSession session, StateVertex dest) {
+		
+		List<StateVertex> result = new ArrayList<>() ;
+		
+		Set<StateVertex> allStates = session.getStateFlowGraph().getAllStates();
+		java.util.Iterator<StateVertex> stateID = allStates.iterator();
+		StateVertex s = stateID.next();
+		
+		Set<Eventable> eve = session.getStateFlowGraph().getIncomingClickable(dest);
+		Iterator<Eventable> destEventable = eve.iterator();
+		Eventable de = destEventable.next();
+		boolean matched = false;
+		while(stateID.hasNext()){
+			if(s.equals(dest)){
+				s = stateID.next();
+				continue;
+			}
+			Set<Eventable> srcClickables = session.getStateFlowGraph().getOutgoingClickables(s);
+			if(srcClickables.size() == 0){
+				s = stateID.next();
+				continue;
+			}
+			Iterator<Eventable> srcEventable = srcClickables.iterator();
+			Eventable se = srcEventable.next();
+			for( int j = 0 ; j < eve.size() ; j++ ){
+				for(int i = 0; i < srcClickables.size(); i++){
+					if(de.equals(se)){
+						result.add(s);
+						matched = true;
+						break;
+					}
+					else{
+						if(srcEventable.hasNext())
+							se = srcEventable.next();
+							continue;
+					}
+				}
+				if(matched)
+					break;
+				else{
+					if(destEventable.hasNext())
+					de = destEventable.next();
+				}
+			}
+			if(stateID.hasNext())
+				s = stateID.next();
+		}
+		return result;
+	}
+
+	private static StateVertex getCurrentState(Set<StateVertex> states, int i) {
+		StateVertex result = null;	
+		java.util.Iterator<StateVertex> stateID = states.iterator();
+		StateVertex s = stateID.next();
+		for(int j = 0 ; j < states.size(); j++ ){
+			if(!indexFlag && j == 0){
+				s = stateID.next();
+				continue;
+			}
+			else if(indexFlag && i == 0){
+				result = s;
+				break;
+			}
+			else{
+				if(i == getCondition(s.getName())){
+					result = s;
+					break;
+				}
+				else{
+					if(stateID.hasNext()){
+						s = stateID.next();
+						continue;
+					}
+					else
+						break;
+				}
+			}
+				
+		}
+		return result;
+		
+			
+	}
+
 	private int extractContents() {
 		int size = 0;
 		try {
@@ -131,35 +290,46 @@ public class Javis implements PostCrawlingPlugin {
 				edge = edg.next();
 				if (edge.getElement().getTag().equalsIgnoreCase("a")
 				        || edge.getElement().getTag().equalsIgnoreCase("img")) {
-					if (edge.getElement().getTag().equalsIgnoreCase("a"))
+					if (edge.getElement().getTag().equalsIgnoreCase("a")){
 						anchorVisible = anchorVisibilityChecking(edge);
+						if(!anchorVisible)
+							continue;
+						else
+							break;
+					}
 					else if (edge.getElement().getTag().equalsIgnoreCase("img")) {
 						node = edge.getElement().getNode().getParentNode();
 						imgVisible = imgChecker(node, edge);
-					}
-					if (anchorVisible || imgVisible) {
-						visibleEdge = true;
-						stateCondition.add(
-						        (sfgInformation.getInputCounter().get() + sfgInformation
-						                .getVisibleState().get()), "visible");
-						sfgInformation.getVisibleState().getAndIncrement();
-						break;
+						if(!imgVisible)
+							continue;
+						else
+							break;
 					}
 				}
 			}
-			if (!visibleEdge) {
+		if (anchorVisible || imgVisible) {
+			visibleEdge = true;
+			stateCondition.add(
+		        (sfgInformation.getInputCounter().get() + sfgInformation
+		               .getVisibleState().get()), "visible");
+			sfgInformation.getVisibleState().getAndIncrement();
+			
+		}
+			
+		if (!visibleEdge && ! imgVisible) {
 				stateCondition.add((sfgInformation.getInvisibleState().get() + sfgInformation
 				        .getVisibleState().get()), "invisible");
 				sfgInformation.getInvisibleState().getAndIncrement();
 			}
 			java.util.Iterator<Eventable> edg1 = event.iterator();
 
-			checkAndCountEdges(anchorVisible, edg1);
+			checkAndCountEdges(edg1);
 		}
 	}
 
-	private void checkAndCountEdges(boolean anchorVisible, java.util.Iterator<Eventable> edg1) {
+	private void checkAndCountEdges(java.util.Iterator<Eventable> edg1) {
 		Node node;
+		boolean anchorVisible;
 		boolean imgVisible;
 		Eventable edge;
 		while (edg1.hasNext()) {
@@ -170,6 +340,7 @@ public class Javis implements PostCrawlingPlugin {
 				sfgInformation.getInvisibleEdge().getAndIncrement();
 			}
 			if (edge.getElement().getTag().equalsIgnoreCase("a")) {
+				anchorVisible = anchorVisibilityChecking(edge);
 				if (anchorVisible) {
 					visiblearray.add(sfgInformation.getVisibleEdge().get(), edge.toString());
 					sfgInformation.getVisibleEdge().getAndIncrement();
