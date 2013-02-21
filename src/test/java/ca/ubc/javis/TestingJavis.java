@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +36,7 @@ public class TestingJavis {
 
 	@Test
 	public void testAnchorVisibilityChecking() throws SAXException, IOException {
-		Javis edp = new Javis();
+		Javis edp = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		String html =
 		        "<body><a id='achr' href='http://www.google.ca'>Google</a><div><span id='spn'>"
 		                + "</span></div></body>";
@@ -61,7 +62,7 @@ public class TestingJavis {
 
 	@Test
 	public void testImgChecker() throws SAXException, IOException {
-		Javis edp = new Javis();
+		Javis edp = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		String html1 =
 		        "<body><a id='achr' href=\"http://www.google.ca\">Google<img id='img' width='25' /></a></body>";
 		String html2 = "<body><div id='div'>Click here<img id='img' width='25' /></div></body>";
@@ -106,7 +107,7 @@ public class TestingJavis {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(index);
 		System.out.println(clickables);
-		Javis javis = new Javis();
+		Javis javis = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getVisibleState().get());
 	}
@@ -135,7 +136,7 @@ public class TestingJavis {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state2);
 
-		Javis javis = new Javis();
+		Javis javis = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 	}
@@ -170,7 +171,7 @@ public class TestingJavis {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
 		System.out.println(clickables);
-		Javis javis = new Javis();
+		Javis javis = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getVisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getVisibleEdge().get());
@@ -207,15 +208,15 @@ public class TestingJavis {
 		assertTrue(graph.addEdge(state3, state4, clickable2));
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
-		Javis javis = new Javis();
+		Javis javis = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getInvisibleEdge().get());
 	}
 
 	@Test
-	public void testStateCategorization_TwoClickables_Invisible_FromTwoStates() throws SAXException,
-	        IOException {
+	public void testStateCategorization_TwoClickables_Invisible_FromTwoStates()
+	        throws SAXException, IOException {
 		Javis.sfgInformation.getInvisibleState().set(0);
 		Javis.sfgInformation.getInvisibleEdge().set(0);
 		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
@@ -237,61 +238,44 @@ public class TestingJavis {
 		Element element1 = dom.getElementById("spn1");
 		Eventable clickable1 = new Eventable(element1, EventType.click);
 		assertTrue(graph.addEdge(state3, state4, clickable1));
-		
+
 		Element element2 = dom.getElementById("img1");
 		Eventable clickable2 = new Eventable(element2, EventType.click);
 
 		assertTrue(graph.addEdge(state2, state4, clickable2));
 
 		Set<Eventable> clickables = graph.getIncomingClickable(state4);
-		Javis javis = new Javis();
+		Javis javis = new Javis(LoggerFactory.getLogger(TestingJavis.class));
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getInvisibleEdge().get());
 	}
 
 	/*
-	@Test
-	public void testStateCategorization_TwoClickables_Invisible_VS_Visible() throws SAXException,
-	        IOException {
-		Javis.sfgInformation.getInvisibleEdge().set(0);
-		Javis.sfgInformation.getVisibleEdge().set(0);
-		Javis.sfgInformation.getInvisibleState().set(0);
-		Javis.sfgInformation.getVisibleState().set(0);
-		StateVertex index = new StateVertex("index", "<table><div>index</div></table>");
-		StateVertex state2 =
-		        new StateVertex("STATE_TWO", "<table><a id='achr'>state2</a></table>");
-		StateVertex state3 = new StateVertex("STATE_THREE", "<table><div>state3</div></table>");
-		StateVertex state4 = new StateVertex("STATE_FOUR", "<table><div>state4</div></table>");
-
-		StateFlowGraph graph = new StateFlowGraph(index);
-		assertTrue(graph.addState(state2) == null);
-		assertTrue(graph.addState(state3) == null);
-		assertTrue(graph.addState(state4) == null);
-		assertNotNull(graph);
-		String html =
-		        "<body><div id='div1'>Google!</div><a id='achr' href='http://www.google.ca'>Google</a></body>";
-
-		Document dom = DomUtils.asDocument(html);
-		assertNotNull(dom);
-		Element element1 = dom.getElementById("div1");
-		Eventable clickable1 = new Eventable(element1, EventType.click);
-		assertTrue(graph.addEdge(state3, state4, clickable1));
-
-		Element element2 = dom.getElementById("achr");
-		Eventable clickable2 = new Eventable(element2, EventType.click);
-
-		assertTrue(graph.addEdge(state3, state4, clickable2));
-
-		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
-		Javis javis = new Javis();
-		javis.stateCategorization(clickables);
-		assertEquals(1, Javis.sfgInformation.getVisibleState().get());
-		assertEquals(0, Javis.sfgInformation.getInvisibleState().get());
-		assertEquals(1, Javis.sfgInformation.getInvisibleEdge().get());
-		assertEquals(1, Javis.sfgInformation.getVisibleEdge().get());
-	}*/
-	
+	 * @Test public void testStateCategorization_TwoClickables_Invisible_VS_Visible() throws
+	 * SAXException, IOException { Javis.sfgInformation.getInvisibleEdge().set(0);
+	 * Javis.sfgInformation.getVisibleEdge().set(0);
+	 * Javis.sfgInformation.getInvisibleState().set(0);
+	 * Javis.sfgInformation.getVisibleState().set(0); StateVertex index = new StateVertex("index",
+	 * "<table><div>index</div></table>"); StateVertex state2 = new StateVertex("STATE_TWO",
+	 * "<table><a id='achr'>state2</a></table>"); StateVertex state3 = new
+	 * StateVertex("STATE_THREE", "<table><div>state3</div></table>"); StateVertex state4 = new
+	 * StateVertex("STATE_FOUR", "<table><div>state4</div></table>"); StateFlowGraph graph = new
+	 * StateFlowGraph(index); assertTrue(graph.addState(state2) == null);
+	 * assertTrue(graph.addState(state3) == null); assertTrue(graph.addState(state4) == null);
+	 * assertNotNull(graph); String html =
+	 * "<body><div id='div1'>Google!</div><a id='achr' href='http://www.google.ca'>Google</a></body>"
+	 * ; Document dom = DomUtils.asDocument(html); assertNotNull(dom); Element element1 =
+	 * dom.getElementById("div1"); Eventable clickable1 = new Eventable(element1, EventType.click);
+	 * assertTrue(graph.addEdge(state3, state4, clickable1)); Element element2 =
+	 * dom.getElementById("achr"); Eventable clickable2 = new Eventable(element2, EventType.click);
+	 * assertTrue(graph.addEdge(state3, state4, clickable2)); Set<Eventable> clickables =
+	 * graph.getOutgoingClickables(state3); Javis javis = new Javis();
+	 * javis.stateCategorization(clickables); assertEquals(1,
+	 * Javis.sfgInformation.getVisibleState().get()); assertEquals(0,
+	 * Javis.sfgInformation.getInvisibleState().get()); assertEquals(1,
+	 * Javis.sfgInformation.getInvisibleEdge().get()); assertEquals(1,
+	 * Javis.sfgInformation.getVisibleEdge().get()); }
+	 */
 
 }
-
