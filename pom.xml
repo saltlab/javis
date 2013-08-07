@@ -8,7 +8,7 @@
 		<version>2.3-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ProjectName</artifactId>
+	<artifactId>Javis</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
 	<name>Javis</name>

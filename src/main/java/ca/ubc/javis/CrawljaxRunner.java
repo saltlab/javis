@@ -3,14 +3,12 @@ package ca.ubc.javis;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.Buffer;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ca.ubc.javis.log.DynamicLoggerFactory;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
@@ -19,7 +17,6 @@ import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
-import com.google.common.io.Files;
 
 public class CrawljaxRunner {
 
@@ -93,10 +90,12 @@ public class CrawljaxRunner {
 		crawljaxConfiguration.setBrowser(BrowserType.firefox);
 		crawljaxConfiguration.setCrawlSpecification(getCrawlSpecification(URLstring));
 
-		GetCandidateElements getCandidateElements = new GetCandidateElements();
+		Logger siteLog = DynamicLoggerFactory.getLoggerForSite(URLstring);
+
+		GetCandidateElements getCandidateElements = new GetCandidateElements(siteLog);
 		crawljaxConfiguration.addPlugin(getCandidateElements);
 
-		Javis javis = new Javis();
+		Javis javis = new Javis(siteLog);
 		crawljaxConfiguration.addPlugin(javis);
 
 		return crawljaxConfiguration;
@@ -104,30 +103,24 @@ public class CrawljaxRunner {
 
 	public static void main(String[] args) throws IOException {
 		String[] urlArray = new String[400];
-		urlArray =
-		        GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 0 ; i < 1 ; i++) {
+		urlArray = GetUrls.getArray("src//main//resources//Alexa.txt", 400);
+		for (int i = 21; i < 23; i++) {
+			getName(urlArray[i]);
+			startTime = System.currentTimeMillis();
+			File file = new File(path + i + name);
+			file.mkdir();
+			File totalContentFile = new File(path + i + name + "/TotalContent.txt");
+			totalContentFile.createNewFile();
+			File totalChangeFile = new File(path + i + name + "/TotalChangeResultLog.txt");
+			totalChangeFile.createNewFile();
+			clearProperties();
+			counter = i;
+			System.setProperty("webdriver.firefox.bin",
+			        "//ubc//ece//home//am//grads//janab//Firefox18//firefox//firefox");
 			try {
-				int j = i;
-				Files.write("", new File(logPath),Charsets.UTF_8);
-				getName(urlArray[i]);
-				startTime = System.currentTimeMillis();
-				File file = new File(path + i + name);
-				file.mkdir();
-				File totalContentFile = new File(path + i + name + "/TotalContent.txt");
-				totalContentFile.createNewFile();
-				File totalChangeFile = new File(path + i + name + "/TotalChangeResultLog.txt");
-				totalChangeFile.createNewFile();
-				clearProperties();
-				counter = i;
-				 System.setProperty("webdriver.firefox.bin",
-				 "//ubc//ece//home//am//grads//janab//Firefox18//firefox//firefox");
 				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
+				startTime = crawljax.getStartCrawl();
 				crawljax.run();
-				File logFile = new File(logPath);
-				if(logFile.exists())
-					copyToCurrentURL(logFile,j);
-					
 
 			} catch (CrawljaxException e) {
 				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
@@ -136,28 +129,6 @@ public class CrawljaxRunner {
 		}
 
 	}
-
-	private static void copyToCurrentURL(File logfile, int i) throws IOException {
-		
-		List<String> crawljaxLog = Files.readLines(logfile, Charsets.UTF_8);
-		
-		StringBuilder logContents = new StringBuilder();
-		
-		i++;
-		if(i != 0){
-			crawljaxLog.toString().trim();
-		}	
-			for (String line : crawljaxLog) {
-				if (line.length() > 1) {
-					logContents.append(line.substring(1));
-					logContents.append("\n");
-				}
-			}
-			Files.write(logContents, new File(path + CrawljaxRunner.counter + name +"/javis.log"), Charsets.UTF_8);
-			//Files.write(" ",new File(logPath), Charsets.UTF_8);
-		}
-		
-	
 
 	private static void getName(String URLstring) {
 		String initialization = "", resticting = "";
