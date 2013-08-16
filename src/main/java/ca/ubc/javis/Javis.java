@@ -9,17 +9,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import com.crawljax.core.CrawlSession;
+import com.crawljax.core.ExitNotifier.ExitStatus;
 import com.crawljax.core.plugin.PostCrawlingPlugin;
-import com.crawljax.core.state.Attribute;
 import com.crawljax.core.state.Element;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateVertex;
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 public class Javis implements PostCrawlingPlugin {
@@ -38,7 +41,8 @@ public class Javis implements PostCrawlingPlugin {
 	}
 
 	@Override
-	public void postCrawling(CrawlSession session) {
+	public void postCrawling(CrawlSession session, ExitStatus exitReason) {
+
 		int totalDomDifferenceSize;
 
 		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
@@ -83,14 +87,14 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		myLogger.info("\n----------------------");
 		File domDifference =
-		        new File(CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name
+		        new File(JavisRunner.path + JavisRunner.counter + JavisRunner.name
 		                + "//TotalChangeResultLog.txt");
 		if (!domDifference.exists()) {
 			FileWriter totalDomDifferences;
 			try {
 				totalDomDifferences =
-				        new FileWriter(CrawljaxRunner.path + CrawljaxRunner.counter
-				                + CrawljaxRunner.name + "/TotalChangeResultLog.txt");
+				        new FileWriter(JavisRunner.path + JavisRunner.counter
+				                + JavisRunner.name + "/TotalChangeResultLog.txt");
 				BufferedWriter out = new BufferedWriter(totalDomDifferences);
 				out.flush();
 				out.close();
@@ -100,8 +104,8 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		try {
 			totalDomDifferenceSize =
-			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
-			                + CrawljaxRunner.name + "/TotalChangeResultLog.txt");
+			        getDomDifferenceByteSize(JavisRunner.path + JavisRunner.counter
+			                + JavisRunner.name + "/TotalChangeResultLog.txt");
 			int contentSize = extractContents();
 			printResults(totalDomDifferenceSize, contentSize, session);
 		} catch (IOException e) {
@@ -268,11 +272,11 @@ public class Javis implements PostCrawlingPlugin {
 	private int extractContents() {
 		int size = 0;
 		try {
-			ContentExtraction_Final newContent = new ContentExtraction_Final();
+			ContentExtraction newContent = new ContentExtraction();
 			newContent.getContents();
 			size =
-			        getDomDifferenceByteSize(CrawljaxRunner.path + CrawljaxRunner.counter
-			                + CrawljaxRunner.name + "/TotalContent.txt");
+			        getDomDifferenceByteSize(JavisRunner.path + JavisRunner.counter
+			                + JavisRunner.name + "/TotalContent.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -472,14 +476,15 @@ public class Javis implements PostCrawlingPlugin {
 
 	public static String getElementAttributes(Element element) {
 		StringBuffer buffer = new StringBuffer();
-
+		
 		if (element != null) {
-			List<Attribute> attributes = element.getAttributes();
-			if (attributes != null) {
-				for (int i = 0; i < attributes.size(); i++) {
-					Attribute attr = attributes.get(i);
-					if (attr.getName().equalsIgnoreCase("href"))
-						buffer.append(attr.getValue());
+			if(element.getTag().equals("A")){
+				ImmutableMap<String, String> attributes = element.getAttributes();
+				if (attributes != null) {
+					if(attributes.get("href") != null){
+						if(!hrefInvisible(attributes.get("href")))
+								buffer.append(attributes.get("href"));
+					}
 				}
 			}
 		}
@@ -523,10 +528,10 @@ public class Javis implements PostCrawlingPlugin {
 
 	public void printResults(int size, int contentSize, CrawlSession session) {
 
-		long timing = System.currentTimeMillis() - CrawljaxRunner.startTime;
+		long timing = System.currentTimeMillis() - JavisRunner.startTime;
 		checkElements();
 		String result =
-		        ("URL: " + CrawljaxRunner.URL + "\nTotal States: "
+		        ("URL: " + JavisRunner.URL + "\nTotal States: "
 		                + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
 		                + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
 		                + sfgInformation.getVisibleState() + "\nInvisible States: "
@@ -547,8 +552,8 @@ public class Javis implements PostCrawlingPlugin {
 		                + sfgInformation.getInputCounter() + "\nButton: " + sfgInformation
 		                .getButtonCounter());
 		try {
-			Files.write(result, new File(CrawljaxRunner.path + CrawljaxRunner.counter
-			        + CrawljaxRunner.name + "//FinalResults.txt"), Charsets.UTF_8);
+			Files.write(result, new File(JavisRunner.path + JavisRunner.counter
+			        + JavisRunner.name + "//FinalResults.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -571,5 +576,6 @@ public class Javis implements PostCrawlingPlugin {
 		if (remainingInvisEdges != ainvis)
 			sfgInformation.getAInvisCounter().set(remainingInvisEdges);
 	}
+
 
 }

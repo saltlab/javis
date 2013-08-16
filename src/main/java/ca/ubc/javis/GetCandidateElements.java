@@ -27,7 +27,7 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 			ImmutableList<CandidateElement> candidateElements, StateVertex state) {
 
 		String filename =
-		        CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name
+		        JavisRunner.path + JavisRunner.counter + JavisRunner.name
 		                + "//CandidateElementCounter.txt";
 		String result;
 		try {
