@@ -2,14 +2,14 @@ package ca.ubc.javis;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
-import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
 
 import com.crawljax.core.CandidateElement;
-import com.crawljax.core.CrawlSession;
+import com.crawljax.core.CrawlerContext;
 import com.crawljax.core.plugin.PreStateCrawlingPlugin;
+import com.crawljax.core.state.StateVertex;
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 
 public class GetCandidateElements implements PreStateCrawlingPlugin {
@@ -23,7 +23,8 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 
 	@SuppressWarnings("static-access")
 	@Override
-	public void preStateCrawling(CrawlSession session, List<CandidateElement> candidateElements) {
+	public void preStateCrawling(CrawlerContext context,
+			ImmutableList<CandidateElement> candidateElements, StateVertex state) {
 
 		String filename =
 		        CrawljaxRunner.path + CrawljaxRunner.counter + CrawljaxRunner.name
@@ -49,4 +50,5 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 		}
 
 	}
+
 }

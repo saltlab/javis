@@ -12,11 +12,11 @@ import ca.ubc.javis.log.DynamicLoggerFactory;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
-import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
-import com.crawljax.core.configuration.CrawlSpecification;
+import com.crawljax.core.configuration.BrowserConfiguration;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
+import com.crawljax.core.configuration.CrawljaxConfiguration.CrawljaxConfigurationBuilder;
 
 public class CrawljaxRunner {
 
@@ -32,73 +32,39 @@ public class CrawljaxRunner {
 	public static long startTime;
 	public static String name;
 
-	private static CrawlSpecification getCrawlSpecification(String url) {
-		URL = url;
-		String randomUrl = "";
-		java.net.URI uri;
-		HttpURLConnection conn = null;
-		try {
-			uri = new java.net.URI(url);
-			conn = (HttpURLConnection) uri.toURL().openConnection();
-			try {
-				conn.getResponseCode();
-				randomUrl = conn.getURL().toString();
-			} catch (IOException e) {
-				ERROR_LOGGER.warn("Cannot read url {} ", url, e);
-			}
-			URL_LOGGER.info("URL" + (cons + 1) + ": " + randomUrl);
-			conn.connect();
-		} catch (Exception e) {
-			ERROR_LOGGER.warn("Cannot open URL", e);
-		}
-		return configuringCrawlSpecification(url);
-
-	}
-
-	private static CrawlSpecification configuringCrawlSpecification(String URLstring) {
-		CrawlSpecification crawler = new CrawlSpecification(URLstring);
-		crawler.click("div");
-		crawler.click("a");
-		crawler.click("button");
-		crawler.click("img");
-		crawler.click("span");
-		crawler.click("input").withAttribute("type", "button");
-		crawler.dontClick("form");
-		crawler.dontClick("iframe");
-
-		// limit the crawling scope
-		crawler.setMaximumStates(MAX_STATES);
-		crawler.setDepth(MAX_CRAWL_DEPTH);
-		crawler.setMaximumRuntime(5, TimeUnit.HOURS);
-
-		crawler.setInputSpecification(getInputSpecification());
+	private static void startCrawl(String URLstring) {
+		CrawljaxConfigurationBuilder builder = CrawljaxConfiguration.builderFor(URLstring);
+		builder.setBrowserConfig(new BrowserConfiguration(BrowserType.FIREFOX));
+		
+		builder.crawlRules().click("div");
+		builder.crawlRules().click("a");
+		builder.crawlRules().click("img");
+		builder.crawlRules().click("span");
+		builder.crawlRules().click("button");
+		builder.crawlRules().click("input").withAttribute("type", "button");
+		builder.crawlRules().dontClick("form");
+		builder.crawlRules().dontClick("iframe");
+		
+		builder.crawlRules().setRandomization(true);
+		
+		builder.setMaximumRunTime(5, TimeUnit.HOURS);
+		builder.setMaximumDepth(MAX_CRAWL_DEPTH);
+		builder.setMaximumStates(MAX_STATES);
+		
 		String urlName = name.substring(1, name.length());
-		crawler.addCrawlCondition("Only crawl this random URL", new UrlCondition(urlName));
-
-		return crawler;
-
-	}
-
-	private static InputSpecification getInputSpecification() {
-		InputSpecification input = new InputSpecification();
-		input.field("q").setValue("Crawljax");
-		return input;
-	}
-
-	private static CrawljaxConfiguration getConfig(String URLstring) {
-		CrawljaxConfiguration crawljaxConfiguration = new CrawljaxConfiguration();
-		crawljaxConfiguration.setBrowser(BrowserType.firefox);
-		crawljaxConfiguration.setCrawlSpecification(getCrawlSpecification(URLstring));
+		builder.crawlRules().addCrawlCondition("Only crawl this random URL", new UrlCondition(urlName));
 
 		Logger siteLog = DynamicLoggerFactory.getLoggerForSite(URLstring);
 
 		GetCandidateElements getCandidateElements = new GetCandidateElements(siteLog);
-		crawljaxConfiguration.addPlugin(getCandidateElements);
+		builder.addPlugin(getCandidateElements);
 
 		Javis javis = new Javis(siteLog);
-		crawljaxConfiguration.addPlugin(javis);
+		builder.addPlugin(javis);
 
-		return crawljaxConfiguration;
+		CrawljaxRunner crawljax = new CrawljaxRunner(builder.build());
+		startTime = crawljax.getStartCrawl();
+		crawljax.call();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -117,15 +83,7 @@ public class CrawljaxRunner {
 			counter = i;
 			System.setProperty("webdriver.firefox.bin",
 			        "//ubc//ece//home//am//grads//janab//Firefox18//firefox//firefox");
-			try {
-				CrawljaxController crawljax = new CrawljaxController(getConfig(urlArray[i]));
-				startTime = crawljax.getStartCrawl();
-				crawljax.run();
-
-			} catch (CrawljaxException e) {
-				ERROR_LOGGER.warn("Error in the main loop {}. Continuing...", e.getMessage(), e);
-			}
-
+			startCrawl(urlArray[i]);
 		}
 
 	}
