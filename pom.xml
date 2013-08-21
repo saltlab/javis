@@ -65,6 +65,17 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.13</version>
 		</dependency>
+		<dependency>
+		<groupId>com.crawljax.plugins</groupId>
+			<artifactId>proxy-plugin</artifactId>
+			<version>1.6-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>se.fishtank</groupId>
+			<artifactId>css-selectors</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 	</dependencies>
 
 

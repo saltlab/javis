@@ -33,6 +33,9 @@ public class JavisRunner {
 	public static String name;
 
 	private static void startCrawl(String URLstring) {
+		
+		URL = URLstring;
+		
 		CrawljaxConfigurationBuilder builder = CrawljaxConfiguration.builderFor(URLstring);
 		
 		builder.crawlRules().click("div");
@@ -44,7 +47,7 @@ public class JavisRunner {
 		builder.crawlRules().dontClick("form");
 		builder.crawlRules().dontClick("iframe");
 		
-		builder.crawlRules().setRandomize(true);
+		builder.crawlRules().setRandomization(true);
 		
 		builder.setMaximumRunTime(5, TimeUnit.HOURS);
 		builder.setMaximumDepth(MAX_CRAWL_DEPTH);
@@ -60,6 +63,9 @@ public class JavisRunner {
 		GetCandidateElements getCandidateElements = new GetCandidateElements(siteLog);
 		builder.addPlugin(getCandidateElements);
 
+		GetJavaScriptFromProxyPlugin getJavaScriptFromProxyPlugin = new GetJavaScriptFromProxyPlugin();
+		builder.addPlugin(getJavaScriptFromProxyPlugin);
+		
 		Javis javis = new Javis(siteLog);
 		builder.addPlugin(javis);
 		
