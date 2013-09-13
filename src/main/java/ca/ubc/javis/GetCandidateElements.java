@@ -3,6 +3,9 @@ package ca.ubc.javis;
 import java.io.File;
 import java.io.IOException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ca.ubc.javis.log.DynamicLoggerFactory;
 
 import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawlerContext;
@@ -15,11 +18,12 @@ import com.google.common.io.Files;
 public class GetCandidateElements implements PreStateCrawlingPlugin {
 
 	public static final ElementCounter COUNTER = new ElementCounter();
-	private final Logger siteLog;
+	private static final Logger LOG = LoggerFactory.getLogger(GetCandidateElements.class);
+	/*	private final Logger siteLog;
 
 	public GetCandidateElements(Logger siteLog) {
 		this.siteLog = siteLog;
-	}
+	}*/
 
 	@SuppressWarnings("static-access")
 	@Override
@@ -27,8 +31,7 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 			ImmutableList<CandidateElement> candidateElements, StateVertex state) {
 
 		String filename =
-		        JavisRunner.path + JavisRunner.counter + JavisRunner.name
-		                + "//CandidateElementCounter.txt";
+		        JavisRunner.path + JavisRunner.counter + JavisRunner.name + "/CandidateElementCounter.txt";
 		String result;
 		try {
 			COUNTER.sortCandidateElements(candidateElements);
@@ -46,7 +49,7 @@ public class GetCandidateElements implements PreStateCrawlingPlugin {
 				Files.write(result, new File(filename), Charsets.UTF_8);
 			}
 		} catch (IOException e) {
-			siteLog.error("I couldnt run prestate crawling on " + filename + " " + e);
+			LOG.error("I couldnt run prestate crawling on " + filename + " " + e);
 		}
 
 	}

@@ -1,0 +1,10 @@
+GET http://www.google.ca:80/s?gs_rn=25&gs_ri=psy-ab&cp=8&gs_id=3&xhr=t&q=bvHRTQnC&es_nrs=true&pf=p&output=search&sclient=psy-ab&oq=&gs_l=&pbx=1&bav=on.2,or.r_qf.&bvm=bv.50952593,d.cGE&fp=ce98639668d39989&biw=940&bih=879&tch=1&ech=1&psi=WLISUpaiLJCWigLNiYCwBA.1376957016952.1 HTTP/1.1
+Host: www.google.ca
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://www.google.ca/?gws_rd=cr
+Cookie: PREF=ID=983da4f05455de2a:U=164c1e4bf8844805:FF=0:TM=1376956976:LM=1376956978:S=jqw2aXb1DVLlqZFA; NID=67=I7LDQG0MVdi4JWEndgifjw1YK_Z42jL5HSg3NLNttIN4AJFhC9lME7dgLKQRIZkRyc3ttHADij92V_FQRWOfVbUxGANyV8yo6zPJvv0wRlOTIrv72zeMqOi-7h7Y0YTw
+Connection: keep-alive
+

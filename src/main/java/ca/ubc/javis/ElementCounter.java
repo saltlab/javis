@@ -6,12 +6,12 @@ import com.crawljax.core.CandidateElement;
 
 public class ElementCounter {
 
-	private final static AtomicInteger anchors = new AtomicInteger();
-	private final static AtomicInteger div = new AtomicInteger();
-	private final static AtomicInteger span = new AtomicInteger();
-	private final static AtomicInteger img = new AtomicInteger();
-	private final static AtomicInteger button = new AtomicInteger();
-	private final static AtomicInteger input = new AtomicInteger();
+	private  static AtomicInteger anchors = new AtomicInteger();
+	private  static AtomicInteger div = new AtomicInteger();
+	private  static AtomicInteger span = new AtomicInteger();
+	private  static AtomicInteger img = new AtomicInteger();
+	private  static AtomicInteger button = new AtomicInteger();
+	private  static AtomicInteger input = new AtomicInteger();
 
 	public static void incrementAnchors() {
 		anchors.incrementAndGet();
@@ -41,25 +41,44 @@ public class ElementCounter {
 		return anchors.get();
 	}
 	
+	public static void setAnchors(int i){
+		anchors.set(i);
+	}
 	public static int getDivs(){
 		return div.get();
+	}
+	public static void setDivs(int i){
+		div.set(i);
 	}
 	
 	public static int getSpans(){
 		return span.get();
 	}
+	public static void setSpans(int i){
+		span.set(i);
+	}
 	
 	public static int getImages(){
 		return img.get();
 	}
-	
+	public static void setImages(int i){
+		img.set(i);
+	}
+
 	public static int getButtons(){
 		return button.get();
 	}
 	
+	public static void setButtons(int i){
+		button.set(i);
+	}
 	public static int getInputs(){
 		return input.get();
 	}
+	public static void setInputs(int i){
+		input.set(i);
+	}
+
 
 	public void sortCandidateElements(List<CandidateElement> candidateElements) {
 		for (CandidateElement candidateElement : candidateElements){

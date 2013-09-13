@@ -9,9 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.bcel.generic.GETSTATIC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
+
+import ca.ubc.javis.log.DynamicLoggerFactory;
 
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.ExitNotifier.ExitStatus;
@@ -22,11 +25,13 @@ import com.crawljax.core.state.StateVertex;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 public class Javis implements PostCrawlingPlugin {
 
+	private static Logger myLogger = LoggerFactory.getLogger(Javis.class);
 	private static Logger sfgLogger = LoggerFactory.getLogger(Javis.class);
 	public static ArrayList<String> visiblearray = new ArrayList<String>();
 	public static ArrayList<String> invisiblearray = new ArrayList<String>();
@@ -34,42 +39,40 @@ public class Javis implements PostCrawlingPlugin {
 	public static StringBuffer buffer = new StringBuffer();
 	public static StateFlowGraphInformation sfgInformation = new StateFlowGraphInformation();
 	public static boolean indexFlag = true;
-	private final Logger myLogger;
-
+	private String pathIdentifier = JavisRunner.counter + JavisRunner.name;
+	private static ArrayList<StateVertex> states;
+	/*	private final Logger myLogger;
+	
 	public Javis(Logger siteLog) {
 		myLogger = siteLog;
-	}
+	}*/
 
 	@Override
 	public void postCrawling(CrawlSession session, ExitStatus exitReason) {
-
+		
 		int totalDomDifferenceSize;
-
-		Set<StateVertex> states = session.getStateFlowGraph().getAllStates();
-		java.util.Iterator<StateVertex> stateID = states.iterator();
-		StateVertex s = stateID.next();
-
-		for (int i = 0; i < states.size(); i++) {
-			/*
-			 * if (s.getName().equals("index")) continue;
-			 */
-
+		
+		ImmutableSet<StateVertex> statesInStateFlowGraph = session.getStateFlowGraph().getAllStates();
+		reproduceStateFlowGraphWithCorrectID(statesInStateFlowGraph);
+		int id;
+		for(StateVertex s : states){
 			Set<Eventable> eve = session.getStateFlowGraph().getIncomingClickable(s);
 			if (eve.size() == 0) {
 				indexFlag = false;
-				s = stateID.next();
 				continue;
 			}
-
 			stateCategorization(eve);
-			sfgLogger.info(s.getName() + " Incoming Edge(s): "
+			sfgLogger.info(getStateName(s) + " Incoming Edge(s): "
 			        + session.getStateFlowGraph().getIncomingClickable(s) + "\n");
-			int j = getCondition(s.getName());
-			sfgLogger.info("Edge is: " + eve + "Condition: " + stateCondition.get(j));
-			if (stateID.hasNext())
-				s = stateID.next();
-			else
-				break;
+
+			if(!indexFlag){
+				id = getId(s)-1;
+				
+			}else{
+				id = getId(s);
+			}
+			 
+			sfgLogger.info("Edge is: " + eve + "Condition: " + stateCondition.get(id));
 		}
 		getDomDifferenceForInvisibleStates(session);
 		myLogger.info("\nVisible States: " + sfgInformation.getVisibleState()
@@ -87,14 +90,12 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		myLogger.info("\n----------------------");
 		File domDifference =
-		        new File(JavisRunner.path + JavisRunner.counter + JavisRunner.name
-		                + "//TotalChangeResultLog.txt");
+		        new File(JavisRunner.path + pathIdentifier + "/TotalChangeResultLog.txt");
 		if (!domDifference.exists()) {
 			FileWriter totalDomDifferences;
 			try {
 				totalDomDifferences =
-				        new FileWriter(JavisRunner.path + JavisRunner.counter
-				                + JavisRunner.name + "/TotalChangeResultLog.txt");
+				        new FileWriter(JavisRunner.path + pathIdentifier + "/TotalChangeResultLog.txt");
 				BufferedWriter out = new BufferedWriter(totalDomDifferences);
 				out.flush();
 				out.close();
@@ -104,15 +105,41 @@ public class Javis implements PostCrawlingPlugin {
 		}
 		try {
 			totalDomDifferenceSize =
-			        getDomDifferenceByteSize(JavisRunner.path + JavisRunner.counter
-			                + JavisRunner.name + "/TotalChangeResultLog.txt");
+			        getDomDifferenceByteSize(JavisRunner.path + pathIdentifier + "/TotalChangeResultLog.txt");
 			int contentSize = extractContents();
 			printResults(totalDomDifferenceSize, contentSize, session);
 		} catch (IOException e) {
 			
 			e.printStackTrace();
 		}
+		
+	}
 
+	private static String getStateName(StateVertex currentState) {
+		String name = "";
+		for(int i = 0 ; i < states.size() ; i++){
+			if(currentState.equals(states.get(i)))
+				if(i == 0){
+					name = "index";
+				}else{
+					name = "state" + i;	
+				}
+		}
+		return name;
+	}
+
+	private void reproduceStateFlowGraphWithCorrectID(
+			ImmutableSet<StateVertex> statesBeforeCorrectingID) {
+		ArrayList<StateVertex> statesInStateFlowGraph = new ArrayList<StateVertex>();
+		int k = 0;
+		for(StateVertex s : statesBeforeCorrectingID){
+			statesInStateFlowGraph.add(k, s);
+			if(k == statesBeforeCorrectingID.size())
+				break;
+			k++;
+		}
+		states = statesInStateFlowGraph;
+		
 	}
 
 	private static int getCondition(String name) {
@@ -142,45 +169,20 @@ public class Javis implements PostCrawlingPlugin {
 			if (stateCondition.get(i).equalsIgnoreCase("invisible")) {
 				try {
 					StateVertex dest = getCurrentState(states, i);
-					List<StateVertex> srcStateVertexList = getPreviousState(session, dest);
-					java.util.Iterator<StateVertex> srcStateVertex =
-					        srcStateVertexList.iterator();
-					if (srcStateVertexList.size() > 1)
-						for (int j = 0; j < srcStateVertexList.size(); j++) {
-							src = srcStateVertex.next();
-							if (src.getName().equalsIgnoreCase("index")) {
-								sourceState = "index";
-								GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(),
-								        (Integer.toString(i + 1) + "from" + sourceState));
-							} else {
-								fromState = getCondition(src.getName());
-								fromState++;
-								GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(),
-								        (Integer.toString(i + 1) + "from" + (Integer
-								                .toString(fromState))));
-							}
-							if (srcStateVertex.hasNext())
-								continue;
-							else
-								break;
-						}
-
-					else {
-						src = srcStateVertex.next();
-						if (src.getName().equalsIgnoreCase("index")) {
-							sourceState = "index";
-							GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(),
-							        (Integer.toString(i + 1) + "from" + sourceState));
-						} else {
-							fromState = getCondition(src.getName());
-							fromState++;
-							GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(),
-							        (Integer.toString(i + 1) + "from" + (Integer
-							                .toString(fromState))));
-							// GetDomDifferences.calculateAndSave(src.getDom(), dest.getDom(),
-							// Integer.toString(i));
-						}
+					StateVertex src1 = getPreviousState(session, dest);
+					if (src1.getName().equalsIgnoreCase("index")) {
+						sourceState = "index";
+						GetDomDifferences.calculateAndSave(src1.getDom(), dest.getDom(),
+						        (Integer.toString(i + 1) + "from" + sourceState));
+					} else {
+						fromState = getCondition(src1.getName());
+						fromState++;
+						GetDomDifferences
+						        .calculateAndSave(src1.getDom(), dest.getDom(),
+						                (Integer.toString(i + 1) + "from" + (Integer
+						                        .toString(fromState))));
 					}
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
@@ -188,55 +190,20 @@ public class Javis implements PostCrawlingPlugin {
 				}
 			}
 		}
-
 	}
 
-	private List<StateVertex> getPreviousState(CrawlSession session, StateVertex dest) {
+	private StateVertex getPreviousState(CrawlSession session, StateVertex dest) {
 
-		List<StateVertex> result = new ArrayList<>();
-
+		StateVertex result = null;
 		Set<StateVertex> allStates = session.getStateFlowGraph().getAllStates();
-		java.util.Iterator<StateVertex> stateID = allStates.iterator();
+		Iterator<StateVertex> stateID = allStates.iterator();
 		StateVertex s = stateID.next();
-
-		Set<Eventable> eve = session.getStateFlowGraph().getIncomingClickable(dest);
-		Iterator<Eventable> destEventable = eve.iterator();
-		Eventable de = destEventable.next();
-		boolean matched = false;
-		while (stateID.hasNext()) {
-			if (s.equals(dest)) {
-				s = stateID.next();
-				continue;
-			}
-			Set<Eventable> srcClickables = session.getStateFlowGraph().getOutgoingClickables(s);
-			if (srcClickables.size() == 0) {
-				s = stateID.next();
-				continue;
-			}
-			Iterator<Eventable> srcEventable = srcClickables.iterator();
-			Eventable se = srcEventable.next();
-			for (int j = 0; j < eve.size(); j++) {
-				for (int i = 0; i < srcClickables.size(); i++) {
-					if (de.equals(se)) {
-						result.add(s);
-						matched = true;
-						break;
-					} else {
-						if (srcEventable.hasNext())
-							se = srcEventable.next();
-						continue;
-					}
-				}
-				if (matched)
-					break;
-				else {
-					if (destEventable.hasNext())
-						de = destEventable.next();
-				}
-			}
-			if (stateID.hasNext())
-				s = stateID.next();
+		ImmutableSet<Eventable> eventables = session.getStateFlowGraph().getIncomingClickable(dest);
+		for(Eventable event : eventables){
+			result = event.getSourceStateVertex();	
+			break;
 		}
+
 		return result;
 	}
 
@@ -252,7 +219,7 @@ public class Javis implements PostCrawlingPlugin {
 				result = s;
 				break;
 			} else {
-				if (i == getCondition(s.getName())) {
+				if (i == getCondition(getStateName(s))) {
 					result = s;
 					break;
 				} else {
@@ -269,14 +236,24 @@ public class Javis implements PostCrawlingPlugin {
 
 	}
 
+	private int getId(StateVertex currentState) {
+		int id = -1;
+		for(int i = 0 ; i < states.size() ; i++){
+			if(currentState.equals(states.get(i))){
+				id = i;
+				break;
+			}
+		}
+		return id;
+	}
+
 	private int extractContents() {
 		int size = 0;
 		try {
 			ContentExtraction newContent = new ContentExtraction();
 			newContent.getContents();
 			size =
-			        getDomDifferenceByteSize(JavisRunner.path + JavisRunner.counter
-			                + JavisRunner.name + "/TotalContent.txt");
+			        getDomDifferenceByteSize(JavisRunner.path + pathIdentifier + "/TotalContent.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -531,18 +508,33 @@ public class Javis implements PostCrawlingPlugin {
 		long timing = System.currentTimeMillis() - JavisRunner.startTime;
 		checkElements();
 		String result =
-		        ("URL: " + JavisRunner.URL + "\nTotal States: "
-		                + session.getStateFlowGraph().getAllStates().size() + "\nTotal Edges: "
-		                + session.getStateFlowGraph().getAllEdges().size() + "\nVisible States: "
-		                + sfgInformation.getVisibleState() + "\nInvisible States: "
-		                + sfgInformation.getInvisibleState() + "\nVisible Edges: "
-		                + (sfgInformation.getVisibleEdge().get()) + "\nInvisible Edges: "
+		        ("URL: " + JavisRunner.URL 
+		        		+ "\n\t ---------"
+		        		+ "\nTotal States: "
+		                + session.getStateFlowGraph().getAllStates().size() 
+		                +  "\nVisible States: "
+		                + sfgInformation.getVisibleState()
+		                + "\nInvisible States: "
+		                + sfgInformation.getInvisibleState()
+		                + "\n\t ---------"
+		                + "\nTotal Edges: "
+		                + session.getStateFlowGraph().getAllEdges().size() 
+		                + "\nVisible Edges: "
+		                + (sfgInformation.getVisibleEdge().get()) 
+		                + "\nInvisible Edges: "
 		                + sfgInformation.getInvisibleEdge()
+		                + "\n\t ---------"
 		                + "\nTotalDomDifferenceSize (Bytes): " + size
 		                + "\nTotalDomDifferenceSize (KB): " + (size / 1024)
-		                + "\nTotalContent (Bytes): " + contentSize + "\nTotalContent (KB) : "
+		                + "\nTotalContent (Bytes): "
+		                + contentSize
+		                + "\nTotalContent (KB) : "
+		                + (contentSize / 1024)
+		                + "\nDOM Size" 
+		                + session.getStateFlowGraph().getMeanStateStringSize()
+		                + "\n\t ---------"
 		                + (contentSize / 1024) + "\nElapsed Time (milliseconds): " + timing
-		                + "\n--------Clickables---------" + "\nA Visible: "
+		                + "\n\t--------Clickables---------" + "\nA Visible: "
 		                + (sfgInformation.getAVisCounter().get()) + "\nA Invisible: "
 		                + sfgInformation.getAInvisCounter() + "\nDiv: "
 		                + sfgInformation.getDivCounter() + "\nSpan: "
@@ -552,8 +544,7 @@ public class Javis implements PostCrawlingPlugin {
 		                + sfgInformation.getInputCounter() + "\nButton: " + sfgInformation
 		                .getButtonCounter());
 		try {
-			Files.write(result, new File(JavisRunner.path + JavisRunner.counter
-			        + JavisRunner.name + "//FinalResults.txt"), Charsets.UTF_8);
+			Files.write(result, new File(JavisRunner.path + pathIdentifier + "/FinalResults.txt"), Charsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

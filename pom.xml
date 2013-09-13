@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.crawljax.plugins</groupId>
 		<artifactId>crawljax-plugins-parent</artifactId>
-		<version>3.2</version>
+		<version>3.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>Javis</artifactId>
@@ -34,8 +34,25 @@
 		<dependency>
 			<groupId>com.crawljax</groupId>
 			<artifactId>crawljax-core</artifactId>
-			<version>3.2</version>
+			<version>3.3-SNAPSHOT</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.crawljax.plugins</groupId>
+			<artifactId>clickable-detector-plugin</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.crawljax.plugins</groupId>
+			<artifactId>proxy-plugin</artifactId>
+			<version>1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>se.fishtank</groupId>
+			<artifactId>css-selectors</artifactId>
+			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -90,4 +107,15 @@
 		</plugins>
 	</build>
 
+
+<repositories>
+		<repository>
+			<id>crawljax.mvn.repo</id>
+			<url>https://github.com/crawljax/crawljax-mvn-repo/raw/master</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>

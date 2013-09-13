@@ -1,0 +1,10 @@
+GET http://www.google.ca:80/gen_204?v=3&s=webhp&action=&e=17259,4000116,4002855,4003881,4004948,4004952,4006037,4006292,4006727,4007080,4007232,4007661,4007714,4007779,4007830,4007862,4008067,4008133,4008142,4008210,4008298,4008424,4008488,4008502,4008540,4008567,4008698,4008725,4008799,4008807,4008826,4008941,4009003,4009096,4009107,4009144,4009180,4009201,4009282,4009357,4009366,4009565,4009617&ei=lrMSUpKaD5HRigLc6oDYBg&imc=1&imn=1&imp=0&atyp=csi&adh=&rt=xjsls.41,prt.42,xjses.117,xjsee.152,xjs.160,ol.209,iml.42,wsrt.147,cst.0,dnst.0,rqst.93,rspt.1 HTTP/1.1
+Host: www.google.ca
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: image/png,image/*;q=0.8,*/*;q=0.5
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://www.google.ca/?gws_rd=cr
+Cookie: PREF=ID=196135eb07f6c3eb:U=5ba8ebe662f09a0e:FF=0:TM=1376957305:LM=1376957306:S=FzrEW-JveWkGgjRu; NID=67=qws-OfXxiCDSOtMzpKyn8Rqchwlyi9sJIPKOq-dVsbQMI1WuobxO7CauScOOIt2qxZ2mcKeGXusiQ6sIIceLj2i3NZCo5ZDQYSWyOsHxLk_BQotfLfxxw_Uhw8DVqUTg
+Connection: keep-alive
+

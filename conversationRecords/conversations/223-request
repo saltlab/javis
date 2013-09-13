@@ -1,0 +1,9 @@
+GET http://csi.gstatic.com:80/csi?v=2&s=youtube&action=glo&yt_spf=0&ei=l7MSUvuaIufUiwLcwoDYDQ&yt_lt=cold&yt_li=0&e=916904,930103,919355,929206,916625&srt=308&rt=ce.138,cl.144,hr.212,je.227,jl.245,ol.513,aft.513&it=st.183 HTTP/1.1
+Host: csi.gstatic.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: image/png,image/*;q=0.8,*/*;q=0.5
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://www.youtube.com/?gl=CA&tab=w1
+Connection: keep-alive
+

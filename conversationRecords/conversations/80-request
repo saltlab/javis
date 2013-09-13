@@ -1,0 +1,9 @@
+GET http://t3.gstatic.com:80/images?q=tbn:ANd9GcRxX52kd1M4xer5989qRHDT0Lj3FyPeTwbs5j6kH_3Yibm8ktua-Wl--niUQ8222YmaTgg8Wss HTTP/1.1
+Host: t3.gstatic.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: image/png,image/*;q=0.8,*/*;q=0.5
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://news.google.ca/nwshp?hl=en&tab=wn
+Connection: keep-alive
+

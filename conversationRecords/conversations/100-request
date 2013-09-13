@@ -1,0 +1,10 @@
+GET http://news.google.ca:80/news/xhr/logXhrAction?&eppn=http%3A%2F%2Fwww.torontosun.com%2Fnews&epic=5&ned=ca HTTP/1.1
+Host: news.google.ca
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://news.google.ca/nwshp?hl=en&tab=wn
+Cookie: PREF=ID=196135eb07f6c3eb:U=5ba8ebe662f09a0e:FF=0:TM=1376957305:LM=1376957306:S=FzrEW-JveWkGgjRu; NID=67=qws-OfXxiCDSOtMzpKyn8Rqchwlyi9sJIPKOq-dVsbQMI1WuobxO7CauScOOIt2qxZ2mcKeGXusiQ6sIIceLj2i3NZCo5ZDQYSWyOsHxLk_BQotfLfxxw_Uhw8DVqUTg
+Connection: keep-alive
+

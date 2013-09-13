@@ -21,7 +21,7 @@ import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.core.state.InMemoryStateFlowGraph;
 import com.crawljax.core.state.StateVertex;
-import com.crawljax.core.state.StateVertexImpl;
+//import com.crawljax.core.state.StateVertexImpl;
 
 import com.crawljax.util.DomUtils;
 
@@ -38,7 +38,7 @@ public class JavisTest {
 	public void Setup(){
 		graph = new InMemoryStateFlowGraph(new ExitNotifier(0));
 	}
-	
+	/*
 	@Test
 	public void testHrefInvisible() {
 		Boolean result = true;
@@ -52,7 +52,7 @@ public class JavisTest {
 
 	@Test
 	public void testAnchorVisibilityChecking() throws SAXException, IOException {
-		Javis edp = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis edp = new Javis();
 		String html =
 		        "<body><a id='achr' href='http://www.google.ca'>Google</a><div><span id='spn'>"
 		                + "</span></div></body>";
@@ -78,7 +78,7 @@ public class JavisTest {
 
 	@Test
 	public void testImgChecker() throws SAXException, IOException {
-		Javis edp = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis edp = new Javis();
 		String html1 =
 		        "<body><a id='achr' href=\"http://www.google.ca\">Google<img id='img' width='25' /></a></body>";
 		String html2 = "<body><div id='div'>Click here<img id='img' width='25' /></div></body>";
@@ -123,7 +123,7 @@ public class JavisTest {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(index);
 		System.out.println(clickables);
-		Javis javis = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis javis = new Javis();
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getVisibleState().get());
 	}
@@ -152,7 +152,7 @@ public class JavisTest {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state2);
 
-		Javis javis = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis javis = new Javis();
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 	}
@@ -187,7 +187,7 @@ public class JavisTest {
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
 		System.out.println(clickables);
-		Javis javis = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis javis = new Javis();
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getVisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getVisibleEdge().get());
@@ -224,7 +224,7 @@ public class JavisTest {
 		assertTrue(graph.addEdge(state3, state4, clickable2));
 
 		Set<Eventable> clickables = graph.getOutgoingClickables(state3);
-		Javis javis = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis javis = new Javis();
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getInvisibleEdge().get());
@@ -262,7 +262,7 @@ public class JavisTest {
 		assertTrue(graph.addEdge(state2, state4, clickable2));
 
 		Set<Eventable> clickables = graph.getIncomingClickable(state4);
-		Javis javis = new Javis(LoggerFactory.getLogger(JavisTest.class));
+		Javis javis = new Javis();
 		javis.stateCategorization(clickables);
 		assertEquals(1, Javis.sfgInformation.getInvisibleState().get());
 		assertEquals(2, Javis.sfgInformation.getInvisibleEdge().get());

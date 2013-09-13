@@ -1,7 +1,10 @@
 package ca.ubc.javis;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -14,37 +17,42 @@ import com.crawljax.condition.UrlCondition;
 import com.crawljax.core.CrawljaxRunner;
 import com.crawljax.core.configuration.BrowserConfiguration;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
+import com.crawljax.core.configuration.ProxyConfiguration;
 import com.crawljax.core.configuration.CrawljaxConfiguration.CrawljaxConfigurationBuilder;
-import com.crawljax.core.state.StateVertex;
-import com.crawljax.core.state.StateVertexTest;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
+import crawljax.plugins.clickabledetector.ClickableDetectorPlugin;
 
 public class JavisRunner {
 
 	private static final int MAX_CRAWL_DEPTH = 3;
-	private static final int MAX_STATES = 5;
-	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
-	private static final Logger ERROR_LOGGER = LoggerFactory.getLogger(JavisRunner.class);
+	private static final int MAX_STATES = 3;
+//	private static final Logger URL_LOGGER = LoggerFactory.getLogger("URL-logfile");
+	private static final Logger LOGGER = LoggerFactory.getLogger(JavisRunner.class);
 
+	 private final static Logger log3 = LoggerFactory.getLogger("Logging");
 	public static int cons = 0, counter = 0;
 	public static String URL;
-	public static String path = "/ubc/ece/home/am/grads/janab/JavisResults/";
+	public static String name;
+	public static String path = "/ubc/ece/home/am/grads/janab/Sep2013-JavisResults/";
 	public static String logPath = "./target/javis.log";
 	public static long startTime;
-	public static String name;
+	
 
-	private static void startCrawl(String URLstring) {
+	private static void startCrawl(String URLstring) throws FileNotFoundException, URISyntaxException {
 		CrawljaxConfigurationBuilder builder = CrawljaxConfiguration.builderFor(URLstring);
-		
-		builder.crawlRules().click("div");
+		URL = URLstring;
+	
 		builder.crawlRules().click("a");
-		builder.crawlRules().click("img");
-		builder.crawlRules().click("span");
-		builder.crawlRules().click("button");
-		builder.crawlRules().click("input").withAttribute("type", "button");
-		builder.crawlRules().dontClick("form");
-		builder.crawlRules().dontClick("iframe");
-		
-		builder.crawlRules().setRandomize(true);
+	//	builder.crawlRules().click("img");
+	//	builder.crawlRules().click("span");
+	//	builder.crawlRules().click("button");
+	//	builder.crawlRules().click("input").withAttribute("type", "button");
+	//	builder.crawlRules().dontClick("form");
+	//	builder.crawlRules().dontClick("iframe");
+	
+	//	builder.crawlRules().setRandomize(true);
 		
 		builder.setMaximumRunTime(5, TimeUnit.HOURS);
 		builder.setMaximumDepth(MAX_CRAWL_DEPTH);
@@ -54,38 +62,86 @@ public class JavisRunner {
 		builder.crawlRules().addCrawlCondition("Only crawl this random URL", new UrlCondition(urlName));
 
 		builder.setBrowserConfig(new BrowserConfiguration(BrowserType.FIREFOX));
+				
+	/*	try {
+			ClickableDetectorPlugin.configure(builder,
+			        ProxyConfiguration.manualProxyOn("127.0.0.1", 8084));
+		} catch (URISyntaxException e) {
 		
-		Logger siteLog = DynamicLoggerFactory.getLoggerForSite(URLstring);
+			e.printStackTrace();
+		}*/
+		
+	//	Logger siteLog = DynamicLoggerFactory.getLoggerForSite(URLstring);
 
-		GetCandidateElements getCandidateElements = new GetCandidateElements(siteLog);
+		GetCandidateElements getCandidateElements = new GetCandidateElements();
 		builder.addPlugin(getCandidateElements);
 
-		Javis javis = new Javis(siteLog);
+		Javis javis = new Javis();
 		builder.addPlugin(javis);
 		
 		CrawljaxRunner crawljax = new CrawljaxRunner(builder.build());
 		crawljax.call();
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, URISyntaxException {
+		log3.info("hello");
+		LOGGER.info("Hello");
 		String[] urlArray = new String[400];
-		urlArray = GetUrls.getArray("src//main//resources//Alexa.txt", 400);
-		for (int i = 21; i < 22; i++) {
+		urlArray = GetUrls.getArray("src/main/resources/Alexa.txt", 400);
+		for (int i = 10; i < 11; i++) {
+			clearProperties();
+			LOGGER.info("Starting Crawl.");
+			int j = i;
+			Files.write("", new File(logPath), Charsets.UTF_8);
+			urlArray[i] = "http://demo.crawljax.com";
 			getName(urlArray[i]);
 			startTime = System.currentTimeMillis();
-			File file = new File(path + i + name);
-			file.mkdir();
+			createFiles(i);
+			
+			counter = i;
+			System.setProperty("webdriver.firefox.bin",
+			        "/ubc/ece/home/am/grads/janab/Firefox19/firefox/firefox");
+			File logFile = new File(logPath);
+			startCrawl(urlArray[i]);
+			if (logFile.exists())
+				copyToCurrentURL(logFile, j);
+			
+		}
+
+	}
+
+	private static void copyToCurrentURL(File logfile, int i) throws IOException {
+
+		List<String> crawljaxLog = Files.readLines(logfile, Charsets.UTF_8);
+
+		StringBuilder logContents = new StringBuilder();
+
+		i++;
+		if (i != 0) {
+			crawljaxLog.toString().trim();
+		}
+		for (String line : crawljaxLog) {
+			if (line.length() > 1) {
+				logContents.append(line.substring(1));
+				logContents.append("\n");
+			}
+		}
+		Files.write(logContents, new File(path + JavisRunner.counter + name + "/javis.log"),
+		        Charsets.UTF_8);
+	}
+	
+	private static void createFiles(int i) {
+		File file = new File(path + i + name);
+		file.mkdir();
+		try {
 			File totalContentFile = new File(path + i + name + "/TotalContent.txt");
 			totalContentFile.createNewFile();
 			File totalChangeFile = new File(path + i + name + "/TotalChangeResultLog.txt");
 			totalChangeFile.createNewFile();
-			clearProperties();
-			counter = i;
-			System.setProperty("webdriver.firefox.bin",
-			        "//ubc//ece//home//am//grads//janab//Firefox19//firefox//firefox");
-			startCrawl(urlArray[i]);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
 	private static void getName(String URLstring) {
@@ -114,6 +170,12 @@ public class JavisRunner {
 
 	private static void clearProperties() {
 		GetDomDifferences.buffer.delete(0, GetDomDifferences.buffer.length());
+		ElementCounter.setAnchors(0);
+		ElementCounter.setDivs(0);
+		ElementCounter.setImages(0);
+		ElementCounter.setSpans(0);
+		ElementCounter.setButtons(0);
+		ElementCounter.setInputs(0);
 		Javis.sfgInformation.getVisibleEdge().set(0);
 		Javis.sfgInformation.getInvisibleEdge().set(0);
 		Javis.sfgInformation.getInvisibleState().set(0);

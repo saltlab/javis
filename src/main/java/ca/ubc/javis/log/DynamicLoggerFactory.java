@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.LoggerFactory;
 
+import ca.ubc.javis.JavisRunner;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -19,10 +20,11 @@ public class DynamicLoggerFactory {
 
 	private static final org.slf4j.Logger LOG = LoggerFactory
 	        .getLogger(DynamicLoggerFactory.class);
-	private static final String TARGET_PATH = "target/sitelog/";
+	public static final String TARGET_PATH = "target/sitelog/";
 	private static final String LOG_PATTERN =
 	        "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n";
-	private static final String LOG_PREFIX = "site-";
+	public static final String LOG_PREFIX = "-";
+	public static String name ;
 	private static final LoggerContext LOGGER_CONTEXT = (LoggerContext) LoggerFactory
 	        .getILoggerFactory();
 	private static final LoadingCache<String, Logger> CACHE;
@@ -68,9 +70,11 @@ public class DynamicLoggerFactory {
 	private static FileAppender<ILoggingEvent> newFileAppender(String url) {
 		FileAppender<ILoggingEvent> fileAppender = new FileAppender<>();
 		fileAppender.setContext(LOGGER_CONTEXT);
-		fileAppender.setName(LOG_PREFIX + url);
+//		name = url.substring(7);
+		fileAppender.setName(JavisRunner.counter + LOG_PREFIX + JavisRunner.name);
+		
 		// set the file name
-		fileAppender.setFile(TARGET_PATH + url + ".log");
+		fileAppender.setFile(TARGET_PATH + JavisRunner.counter + JavisRunner.name + "/" +url.substring(7) + ".log");
 
 		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 		encoder.setContext(LOGGER_CONTEXT);

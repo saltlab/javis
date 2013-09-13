@@ -1,0 +1,9 @@
+GET http://s0.2mdn.net:80/879366/iframe_buster_200_25.js HTTP/1.1
+Host: s0.2mdn.net
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://ad.doubleclick.net/N4061/adi/com.ythome/_default;sz=970x250;tile=1;plat=pc;dc_yt=1;kbsg=HPCA130819;kcr=ca;kga=-1;kgg=-1;klg=en;kmyd=ad_creative_1;ord=4200714359786980?
+Connection: keep-alive
+
